@@ -14,7 +14,10 @@ const routes: Routes = [
   {
     path: 'list',
     loadChildren: './list/list.module#ListPageModule'
-  }
+  },
+  { path: 'tracking/:carId', loadChildren: './tracking/tracking.module#TrackingPageModule' },
+  { path: 'test', loadChildren: './test/test.module#TestPageModule' },
+  { path: 'test2', loadChildren: './test2/test2.module#Test2PageModule' }
 ];
 
 @NgModule({

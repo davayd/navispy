@@ -1,0 +1,160 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+    </ion-buttons>
+    <ion-title>tracking</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <div style="background-color: cadetblue" [style.height.px]="mapContainerHeight">
+
+  </div>
+  <ion-item *ngIf="car" lines="none" class="border-bottom">
+    <ion-avatar slot="start">
+      <img src="assets/img/slide_6.png">
+    </ion-avatar>
+    <ion-label>
+      {{car.make}} {{car.model}}
+      <div class="car-info">
+        <ion-icon name="play"></ion-icon>
+        {{car.startTime}}
+        <ion-icon name="timer"></ion-icon>
+        {{car.travelTime}}
+        <ion-icon name="trending-up"></ion-icon>
+        {{car.totalPath}}км
+      </div>
+      <p>{{car.currentLocation}}</p>
+    </ion-label>
+  </ion-item>
+  <ion-segment [(ngModel)]="segmentSpecification" class="border-bottom">
+    <ion-segment-button value="info" class="segment">
+      <ion-label text-uppercase>Инфо</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="history" class="segment">
+      <ion-label text-uppercase>История</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div [ngSwitch]="segmentSpecification">
+    <div *ngSwitchCase="'info'">
+      <ion-list *ngIf="carInfo" no-padding>
+        <!-- ДАТЧИКИ -->
+        <ion-button expand="full" color="medium" *ngIf="carInfo.sensors" (click)="toggleSection('sensors')" no-margin>
+          Датчики
+          <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.sensors.open"></ion-icon>
+          <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.sensors.open"></ion-icon>
+        </ion-button>
+        <ion-list *ngIf="carInfo.sensors && carInfo.sensors.open" no-padding style=" transition: 0.2s linear;">
+          <ion-item *ngFor="let item of carInfo.sensors | keyvalue" lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              {{item.key}}
+            </ion-label>
+            <ion-label text-wrap text-right>
+              {{item.value}}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <!-- СЧЕТЧИКИ -->
+        <ion-button expand="full" color="medium" *ngIf="carInfo.meter" (click)="toggleSection('meter')" no-margin>
+          Счетчики
+          <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.meter.open"></ion-icon>
+          <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.meter.open"></ion-icon>
+        </ion-button>
+        <ion-list *ngIf="carInfo.meter && carInfo.meter.open" no-padding style=" transition: 0.2s linear;">
+          <ion-item *ngFor="let item of carInfo.meter | keyvalue" lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              {{item.key}}
+            </ion-label>
+            <ion-label text-wrap text-right>
+              {{item.value}}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-item lines="none" class="border-bottom fs-14">
+          <ion-label text-wrap color="primary">
+            Адрес
+          </ion-label>
+          <ion-label text-wrap text-right>
+            {{carInfo.address}}
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none" class="border-bottom fs-14">
+          <ion-label text-wrap color="primary">
+            Последнее сообщение
+          </ion-label>
+          <ion-label text-wrap text-right>
+            {{carInfo.lastMessage}}
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none" class="border-bottom fs-14">
+          <ion-label text-wrap color="primary">
+            Спутники
+          </ion-label>
+          <ion-label text-wrap text-right>
+            {{carInfo.satellites}}
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none" class="border-bottom fs-14">
+          <ion-label text-wrap color="primary">
+            Высота
+          </ion-label>
+          <ion-label text-wrap text-right>
+            {{carInfo.height}}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div *ngSwitchCase="'history'">
+      <ion-segment [(ngModel)]="segmentHistory" scrollable class="border-bottom fs-14">
+        <ion-segment-button>
+          <ion-label>home</ion-label>
+        </ion-segment-button>
+        <ion-segment-button checked>
+          <ion-label>heart</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>pin</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>star</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>call</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>globe</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="basket">
+          <ion-label>basket</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <div [ngSwitch]="segmentHistory">
+        <div *ngSwitchCase="'basket'">
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+          <div>123</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</ion-content>
