@@ -1,1 +1,144 @@
-<div>test</div>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="''"></ion-back-button>
+    </ion-buttons>
+    <ion-title>tracking</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <div style="    display: flex;
+  height: 100%;
+  flex-direction: column;">
+    <div style="min-height: 200px;"></div>
+    <ion-item lines="none" class="border-bottom">
+      <ion-avatar slot="start">
+        <img src="assets/img/slide_6.png">
+      </ion-avatar>
+      <ion-label>
+        KAMAZ A00011
+        <div class="car-info">
+          <ion-icon name="play"></ion-icon>
+          11
+          <ion-icon name="timer"></ion-icon>
+          1h 10m
+          <ion-icon name="trending-up"></ion-icon>
+          100км
+        </div>
+        <p>asdasdas das dasd asas</p>
+      </ion-label>
+    </ion-item>
+    <div style="overflow: scroll;">
+      <ion-segment [(ngModel)]="segmentSpecification" class="border-bottom">
+        <ion-segment-button value="info" class="segment">
+          <ion-label text-uppercase>Инфо</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="history" class="segment">
+          <ion-label text-uppercase>История</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <div [ngSwitch]="segmentSpecification">
+        <div *ngSwitchCase="'info'">
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Адрес
+            </ion-label>
+            <ion-label text-wrap text-right>
+              sadasdasd
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Последнее сообщение
+            </ion-label>
+            <ion-label text-wrap text-right>
+              asdas
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Спутники
+            </ion-label>
+            <ion-label text-wrap text-right>
+              asdasd
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Высота
+            </ion-label>
+            <ion-label text-wrap text-right>
+              asdas
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Высота
+            </ion-label>
+            <ion-label text-wrap text-right>
+              asdas
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" class="border-bottom fs-14">
+            <ion-label text-wrap color="primary">
+              Высота
+            </ion-label>
+            <ion-label text-wrap text-right>
+              asdas
+            </ion-label>
+          </ion-item>
+        </div>
+
+        <div *ngSwitchCase="'history'">
+          <ion-segment [(ngModel)]="segmentHistory" scrollable class="border-bottom fs-14">
+            <ion-segment-button>
+              <ion-label>home</ion-label>
+            </ion-segment-button>
+            <ion-segment-button checked>
+              <ion-label>heart</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>pin</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>star</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>call</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>globe</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="basket">
+              <ion-label>basket</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <div [ngSwitch]="segmentHistory">
+            <div *ngSwitchCase="'basket'">
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+              <div>123</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
