@@ -1,34 +1,38 @@
-
 <ion-content padding>
-  <!-- <ion-input placeholder="Login"></ion-input>
-  <ion-input placeholder="Password"></ion-input>
-
-  <ion-button expand="full">LOG IN</ion-button> -->
-
-
   <ion-grid>
-      <ion-row justify-content-center>
-        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-          <div text-center>
-            <ion-img src="assets/img/logo.svg"></ion-img>
-          </div>
+    <ion-row justify-content-center>
+      <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+        <div text-center>
+          <ion-img src="assets/img/vectorpaint.svg"></ion-img>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div padding>
-            <ion-item>
-              <ion-input type="text" placeholder="Username"></ion-input>
+            <ion-item class="form-group">
+              <ion-input type="text" placeholder="Имя пользователя" formControlName="username" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.username.errors }"></ion-input>
             </ion-item>
-    
-            <ion-item>
-              <ion-input type="password" placeholder="Password"></ion-input>
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback" padding-horizontal>
+              <div *ngIf="f.username.errors.required">Укажите имя пользователя</div>
+            </div>
+            <ion-item class="form-group">
+              <ion-input type="password" placeholder="Пароль" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"></ion-input>
             </ion-item>
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback" padding-horizontal>
+              <div *ngIf="f.password.errors.required">Укажите пароль</div>
+            </div>
           </div>
-    
-          <div padding>
-            <ion-button routerLink="/cars" expand="block" fill="outline" color="medium">
-              <ion-text>Login</ion-text> 
+          <ion-text *ngIf="error" color="danger" padding-horizontal>
+            {{error}}
+          </ion-text>
+          <div class="form-group" padding>
+            <ion-button [disabled]="loading" expand="block" fill="outline" color="medium" (click)="login()">
+              <ion-text *ngIf="!loading">Войти</ion-text>
+              <ion-spinner *ngIf="loading"></ion-spinner>
             </ion-button>
           </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

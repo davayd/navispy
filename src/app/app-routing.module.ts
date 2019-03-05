@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { AuthGuardService } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -9,13 +10,13 @@ const routes: Routes = [
   },
   {
     path: "cars",
-    loadChildren: "./cars/cars.module#CarsPageModule"
+    loadChildren: "./cars/cars.module#CarsPageModule",
+    canActivate: [AuthGuardService]
   },
   {
     path: "track/:carId",
     loadChildren: "./tracking/tracking.module#TrackingPageModule"
   },
-  { path: "test", loadChildren: "./test/test.module#TestPageModule" },
   { path: "login", loadChildren: "./login/login.module#LoginPageModule" }
 ];
 

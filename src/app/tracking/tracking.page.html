@@ -3,32 +3,29 @@
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
     </ion-buttons>
-    <ion-title>tracking</ion-title>
+    <ion-title>Слежение</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshDataClick()">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<!-- <ion-content padding>
+  <a class="sourcecode" href="https://github.com/mapsplugin/ionic-googlemaps-quickdemo-v4/blob/master/src/app/marker/marker.page.ts" target="_blank">[source code]</a>
+  <p>Click on markers!</p>
+  <div id="map_canvas"></div>
+</ion-content> -->
+
 <ion-content scrollY="false">
-  <div style="display: flex; height: 100%; flex-direction: column;">
+  <div style="display: flex; height: 100%; flex-direction: column;" *ngIf="carInfo">
+    <div id="map_canvas"></div>
 
-    <div style="min-height: 200px; background-color: cadetblue">
-
-    </div>
-
-    <ion-item *ngIf="car" lines="none" class="border-bottom">
-      <ion-avatar slot="start">
-        <img src="assets/img/slide_6.png">
-      </ion-avatar>
+    <ion-item *ngIf="carName" lines="none" class="border-bottom">
+      <ion-icon slot="start" name="car" class="icon-car"></ion-icon>
       <ion-label>
-        {{car.make}} {{car.model}}
-        <div class="car-info">
-          <ion-icon name="play"></ion-icon>
-          {{car.startTime}}
-          <ion-icon name="timer"></ion-icon>
-          {{car.travelTime}}
-          <ion-icon name="trending-up"></ion-icon>
-          {{car.totalPath}}км
-        </div>
-        <p>{{car.currentLocation}}</p>
+        {{ carName }}
       </ion-label>
     </ion-item>
 
@@ -43,77 +40,102 @@
       </ion-segment>
       <div [ngSwitch]="segmentSpecification">
         <div *ngSwitchCase="'info'">
-          <ion-list *ngIf="carInfo" no-padding>
-            <!-- ДАТЧИКИ -->
-            <ion-button expand="full" color="medium" *ngIf="carInfo.sensors" (click)="toggleSection('sensors')"
-              no-margin>
-              Датчики
-              <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.sensors.open"></ion-icon>
-              <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.sensors.open"></ion-icon>
+          <ion-list no-padding>
+            <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
+              ДРУГОЕ
+              <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.other.open"></ion-icon>
+              <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.other.open"></ion-icon>
             </ion-button>
-            <ion-list *ngIf="carInfo.sensors && carInfo.sensors.open" no-padding style=" transition: 0.2s linear;">
-              <ion-item *ngFor="let item of carInfo.sensors | keyvalue" lines="none" class="border-bottom fs-14">
+            <ion-list *ngIf="carInfo.other && carInfo.other.open" no-padding style=" transition: 0.2s linear;">
+              <ion-item *ngFor="let item of (carInfo.other | keyvalue)" lines="none" class="border-bottom fs-14">
                 <ion-label text-wrap color="primary">
-                  {{item.key}}
+                  {{ item.key }}
                 </ion-label>
                 <ion-label text-wrap text-right>
-                  {{item.value}}
+                  {{ item.value }}
                 </ion-label>
               </ion-item>
             </ion-list>
-            <!-- СЧЕТЧИКИ -->
-            <ion-button expand="full" color="medium" *ngIf="carInfo.meter" (click)="toggleSection('meter')" no-margin>
-              Счетчики
-              <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.meter.open"></ion-icon>
-              <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.meter.open"></ion-icon>
-            </ion-button>
-            <ion-list *ngIf="carInfo.meter && carInfo.meter.open" no-padding style=" transition: 0.2s linear;">
-              <ion-item *ngFor="let item of carInfo.meter | keyvalue" lines="none" class="border-bottom fs-14">
-                <ion-label text-wrap color="primary">
-                  {{item.key}}
-                </ion-label>
-                <ion-label text-wrap text-right>
-                  {{item.value}}
-                </ion-label>
-              </ion-item>
-            </ion-list>
+
             <ion-item lines="none" class="border-bottom fs-14">
               <ion-label text-wrap color="primary">
-                Адрес
+                Пробег (текущий день)
               </ion-label>
               <ion-label text-wrap text-right>
-                {{carInfo.address}}
+                {{ carInfo.mileage }}
               </ion-label>
             </ion-item>
             <ion-item lines="none" class="border-bottom fs-14">
               <ion-label text-wrap color="primary">
-                Последнее сообщение
+                DUT1
               </ion-label>
               <ion-label text-wrap text-right>
-                {{carInfo.lastMessage}}
+                {{ carInfo.DUT1 }}
               </ion-label>
             </ion-item>
             <ion-item lines="none" class="border-bottom fs-14">
               <ion-label text-wrap color="primary">
-                Спутники
+                DUT2
               </ion-label>
               <ion-label text-wrap text-right>
-                {{carInfo.satellites}}
+                {{ carInfo.DUT2 }}
               </ion-label>
             </ion-item>
             <ion-item lines="none" class="border-bottom fs-14">
               <ion-label text-wrap color="primary">
-                Высота
+                DUT3
               </ion-label>
               <ion-label text-wrap text-right>
-                {{carInfo.height}}
+                {{ carInfo.DUT3 }}
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Скорость
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ carInfo.speed }}
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Широта
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ carInfo.latitude }}
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Долгота
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ carInfo.longitude }}
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Время обновления
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ carInfo.time }}
               </ion-label>
             </ion-item>
           </ion-list>
         </div>
 
         <div *ngSwitchCase="'history'">
-          <ion-segment [(ngModel)]="segmentHistory" scrollable class="border-bottom fs-14">
+          <!-- <ion-slides class="border-bottom" [options]="slidesOpts">
+            <ion-slide *ngFor="let day of daysOfYear">
+              <span>{{ day }}</span>
+            </ion-slide>
+          </ion-slides> -->
+
+          <!-- <ion-segment
+            [(ngModel)]="segmentHistory"
+            scrollable
+            class="border-bottom fs-14"
+          >
             <ion-segment-button>
               <ion-label>home</ion-label>
             </ion-segment-button>
@@ -135,48 +157,59 @@
             <ion-segment-button value="basket">
               <ion-label>basket</ion-label>
             </ion-segment-button>
-          </ion-segment>
-          <div [ngSwitch]="segmentHistory">
+          </ion-segment> -->
+          <!-- <div [ngSwitch]="segmentHistory">
             <div *ngSwitchCase="'basket'">
-              <ion-grid>
-                <ion-row justify-content-center align-items-center>
-                  <ion-col size="2">23:59</ion-col>
+              <ion-grid *ngIf="carHistory" no-padding>
+                <ion-row
+                  justify-content-center
+                  align-items-center
+                  *ngFor="let hItem of carHistory"
+                  class="border-bottom"
+                  [ngClass]="{ highlight: hItem.status === 'moving' }"
+                >
+                  <ion-col size="2" text-center>{{ hItem.startTime }}</ion-col>
                   <ion-col size="2">
-                    <ion-chip>P</ion-chip>
+                    <ion-chip
+                      *ngIf="hItem.status === 'parking'"
+                      style="    background-color: steelblue;
+                    color: white;"
+                      >P</ion-chip
+                    >
+                    <ion-chip *ngIf="hItem.status === 'fuel'">F</ion-chip>
+                    <ion-chip
+                      *ngIf="hItem.status === 'moving'"
+                      style="background-color: seagreen"
+                    >
+                      <ion-icon
+                        name="arrow-forward"
+                        no-margin
+                        color="light"
+                      ></ion-icon>
+                    </ion-chip>
                   </ion-col>
-                  <ion-col size="8">
-                    qweqweqwe qwe qw eqwe qweqweqw
+                  <ion-col size="8" class="fs-14">
+                    <ng-container [ngSwitch]="hItem.status">
+                      <div *ngSwitchCase="'parking'">
+                        {{ hItem.currentLocation }}
+                      </div>
+                      <div *ngSwitchCase="'fuel'">
+                        <div>{{ hItem.volume }}</div>
+                        <div>{{ hItem.currentLocation }}</div>
+                      </div>
+                      <div *ngSwitchCase="'moving'" style="display: flex">
+                        <div>{{ hItem.travelTime }}</div>
+                        <div>{{ hItem.totalPath }}</div>
+                        <div>{{ hItem.averageSpeed }}</div>
+                      </div>
+                    </ng-container>
                   </ion-col>
                 </ion-row>
               </ion-grid>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
-              <div>123</div>
             </div>
-          </div>
-
+          </div> -->
         </div>
       </div>
     </div>
-
   </div>
-
-
-
-
 </ion-content>

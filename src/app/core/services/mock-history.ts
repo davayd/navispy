@@ -1,37 +1,107 @@
-import { Car } from "../models/car";
+import { CarHistory } from "../models/car";
 
-export const CARS: Car[] = [
+export const HISTORY: CarHistory[] = [
   {
+    status: "parking",
     currentLocation: "ул. Романовская Слобода 7, Минск",
-    currentSpeed: 20,
-    id: 1,
-    lastUpdated: 30,
-    make: "KAMAZ",
-    model: "A00011",
-    totalPath: 1.2,
-    startTime: "2:01",
-    travelTime: "3 мин."
+    startTime: "",
+    travelTime: ""
   },
   {
-    currentLocation: "ул. Максима Богдановича 23, Минск",
-    currentSpeed: 63,
-    id: 2,
-    lastUpdated: 5,
-    make: "Mercedez",
-    model: "A00022",
-    totalPath: 30.32,
-    startTime: "12:33",
-    travelTime: "25 мин."
+    status: "moving",
+    startTime: "4:47",
+    travelTime: "2ч. 56мин.",
+    totalPath: 204,
+    averageSpeed: 69
   },
   {
-    currentLocation: "ул. Ульяновская 8, Минск",
-    currentSpeed: 29,
-    id: 3,
-    lastUpdated: 300,
-    make: "ГАЗ",
-    model: "A00033",
-    totalPath: 60.32,
-    startTime: "21:23",
-    travelTime: "1ч. 23мин."
-  }
+    status: "parking",
+    currentLocation: "ул. Романовская Слобода 7, Минск",
+    startTime: "7:43",
+    travelTime: "1ч. 7мин."
+  },
+  {
+    status: "moving",
+    startTime: "8:50",
+    travelTime: "51мин.",
+    totalPath: 61,
+    averageSpeed: 72
+  },
+  {
+    status: "parking",
+    currentLocation: "ул. Мельникайте 2, Минск",
+    startTime: "9:42",
+    travelTime: "2ч. 4мин."
+  },
+  {
+    status: "moving",
+    startTime: "11:46",
+    travelTime: "52мин.",
+    totalPath: 58,
+    averageSpeed: 67
+  },
+  {
+    status: "fuel",
+    currentLocation: "ул. Романовская Слобода 7, Минск",
+    startTime: "12:45",
+    volume: 125
+  },
+  {
+    status: "parking",
+    currentLocation: "ул. Мельникайте 2, Минск",
+    startTime: "12:50",
+    travelTime: "12мин."
+  },
+  {
+    status: "moving",
+    startTime: "12:51",
+    travelTime: "16мин.",
+    totalPath: 16,
+    averageSpeed: 59
+  },
+  {
+    status: "parking",
+    currentLocation: "ул. Мельникайте 2, Минск",
+    startTime: "13:07",
+    travelTime: "12мин."
+  },
+  {
+    status: "moving",
+    startTime: "13:42",
+    travelTime: "2ч. 16мин.",
+    totalPath: 190,
+    averageSpeed: 80
+  },
+  {
+    status: "parking",
+    currentLocation: "ул. Мельникайте 2, Минск",
+    startTime: "16:07",
+    travelTime: "6мин."
+  },
+  {
+    status: "moving",
+    startTime: "16:11",
+    travelTime: "2ч. 16мин.",
+    totalPath: 189,
+    averageSpeed: 61
+  },
+  {
+    status: "fuel",
+    currentLocation: "ул. Романовская Слобода 7, Минск",
+    startTime: "19:07",
+    volume: 124
+  },
+  {
+    status: "parking",
+    currentLocation: "ул. Мельникайте 2, Минск",
+    startTime: "19:18",
+    travelTime: "1ч. 12мин."
+  },
+  {
+    status: "moving",
+    startTime: "20:31",
+    travelTime: "4ч. 16мин.",
+    totalPath: 340,
+    averageSpeed: 69
+  },
 ];

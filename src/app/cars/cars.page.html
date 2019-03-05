@@ -10,16 +10,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar></ion-searchbar>
+  <!-- <ion-searchbar></ion-searchbar> -->
 
   <ion-list>
-    <ion-item *ngFor="let item of cars" routerLink="/track/{{item.id}}">
-      <ion-avatar slot="start">
-        <img src="assets/img/slide_6.png">
-      </ion-avatar>
+    <ion-item *ngFor="let item of cars" (click)="navigate(item)" routerDirection="forward">
+      <ion-icon slot="start" name="car" class="icon-car"></ion-icon>
       <ion-label>
-        {{item.make}} {{item.model}}
-        <div class="car-info">
+        {{item.name}}
+        <!-- <div class="car-info">
 
           <ion-icon name="play"></ion-icon>
           {{item.startTime}}
@@ -27,8 +25,7 @@
           {{item.travelTime}}
           <ion-icon name="trending-up"></ion-icon>
           {{item.totalPath}}км
-        </div>
-        <p>{{item.currentLocation}}</p>
+        </div> -->
       </ion-label>
     </ion-item>
   </ion-list>

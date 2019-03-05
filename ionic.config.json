@@ -1,5 +1,7 @@
 {
   "name": "navispy",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
