@@ -2,11 +2,10 @@ import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuController, IonSlides, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
-import { CarInfo } from "../core/models/car";
+import { CarInfo, CarMotionBreakdown } from "../core/models/car";
 import {
   Subject,
   Observable,
-  timer,
   BehaviorSubject,
   interval,
   Subscription
@@ -14,21 +13,13 @@ import {
 import {
   GoogleMaps,
   GoogleMap,
-  GoogleMapsEvent,
-  ILatLng,
   Marker,
-  BaseArrayClass,
-  CameraPosition
+  PolylineOptions,
+  ILatLng,
+  Polyline
 } from "@ionic-native/google-maps";
-import { HTTPResponse } from "@ionic-native/http/ngx";
-import {
-  merge,
-  concatMap,
-  map,
-  takeUntil,
-  switchMap,
-  startWith
-} from "rxjs/operators";
+import { takeUntil, switchMap, startWith } from "rxjs/operators";
+import * as moment from "moment";
 
 @Component({
   selector: "app-tracking",
@@ -47,6 +38,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
   segmentHistory = "basket";
   map: GoogleMap;
   carMarker: Marker;
+  carMotionParts: CarMotionBreakdown[];
+  dateNow: moment.Moment;
+  currentDate: string;
 
   daysOfYear: string[] = [];
   @ViewChild(IonSlides) slides: IonSlides;
@@ -57,6 +51,10 @@ export class TrackingPage implements OnInit, AfterViewInit {
 
   polledCarInfo$: Observable<CarInfo>;
   load$ = new BehaviorSubject("");
+
+  // ROUTES
+  historyRoute: Polyline;
+  historyParking: Marker;
 
   constructor(
     private route: ActivatedRoute,
@@ -80,6 +78,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
       time: "",
       course: 0
     };
+    this.dateNow = moment();
+    this.currentDate = this.dateNow.format("DD-MM-YYYY");
   }
 
   async ngOnInit() {
@@ -90,32 +90,19 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.daysOfYear = this.trackerService.daysOfYear;
   }
 
-  ngAfterViewInit() {
-    // this.slides.slideTo(this.daysOfYear.length - 1);
-    // this.slides.options = {
-    //   initialSlide: this.daysOfYear.length - 1,
-    //   slidesPerView: 3
-    // };
-  }
+  ngAfterViewInit() {}
 
   ionViewWillEnter() {
     this.carId = +this.route.snapshot.paramMap.get("carId");
     this.carName = this.route.snapshot.queryParamMap.get("name");
 
-    // this.timerSub = interval(10000)
-    //   .pipe(
-    //     startWith(0),
-    //     switchMap(() => this.trackerService.getCar(this.carId))
-    //   )
-    //   .subscribe(res => {
-    //     console.log(res);
-    //     this.carInfo.other.open
-    //       ? (res.other.open = true)
-    //       : (res.other.open = false);
-
-    //     this.carInfo = res;
-    //     this.updateMap(this.carInfo);
-    //   });
+    this.trackerService
+      .getCarMotionBreakdown(this.carId, this.currentDate)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(parts => {
+        console.log("parts", parts);
+        this.carMotionParts = parts;
+      });
 
     const carInfoPolled$ = this.load$.pipe(
       switchMap(_ =>
@@ -152,11 +139,6 @@ export class TrackingPage implements OnInit, AfterViewInit {
   }
 
   loadMap() {
-    // const cameraPos: CameraPosition<ILatLng> = {
-    //   target: { lat: +car.latitude, lng: +car.longitude },
-    //   zoom: 16
-    // };
-
     this.map = GoogleMaps.create("map_canvas", {
       camera: {
         zoom: 18,
@@ -192,6 +174,50 @@ export class TrackingPage implements OnInit, AfterViewInit {
         });
         this.carMarker.setRotation(carInfo.course);
       }
+    }
+  }
+
+  buildRoute(action: CarMotionBreakdown) {
+    // remove past tags
+    if (this.historyParking) {
+      this.historyParking.remove();
+    }
+    if (this.historyRoute) {
+      this.historyRoute.remove();
+    }
+
+    if (action.motion === "P") {
+      // draw marker and focus camera on it
+      const position = { lat: +action.latStart, lng: +action.lonStart };
+      this.historyParking = this.map.addMarkerSync({
+        position: position
+      });
+      this.map.animateCamera({
+        target: position,
+        duration: 500
+      });
+    } else if (action.motion === "") {
+      this.trackerService
+        .getCarTrack(261, "2019-03-06 13:42:30", "2019-03-06 14:26:04")
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(result => {
+          console.log(result);
+          const route = Object.values(result.route);
+          const routeCoords: ILatLng[] = route.map(routePart => {
+            return { lat: routePart.latitude, lng: routePart.longitude };
+          });
+          console.log(routeCoords);
+          this.historyRoute = this.map.addPolylineSync({
+            color: "#AA00FF",
+            width: 5,
+            points: []
+          });
+          this.historyRoute.setPoints(routeCoords);
+          this.map.animateCamera({
+            target: routeCoords,
+            duration: 500
+          });
+        });
     }
   }
 }

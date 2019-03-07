@@ -131,83 +131,41 @@
             </ion-slide>
           </ion-slides> -->
 
-          <!-- <ion-segment
-            [(ngModel)]="segmentHistory"
-            scrollable
-            class="border-bottom fs-14"
-          >
-            <ion-segment-button>
-              <ion-label>home</ion-label>
+          <ion-segment [(ngModel)]="segmentHistory" scrollable class="border-bottom fs-14">
+            <ion-segment-button value="04.03.2019">
+              <ion-label>04.03.2019</ion-label>
             </ion-segment-button>
-            <ion-segment-button checked>
-              <ion-label>heart</ion-label>
+            <ion-segment-button value="05.03.2019">
+              <ion-label>05.03.2019</ion-label>
             </ion-segment-button>
-            <ion-segment-button>
-              <ion-label>pin</ion-label>
+            <ion-segment-button value="06.03.2019" checked>
+              <ion-label>06.03.2019</ion-label>
             </ion-segment-button>
-            <ion-segment-button>
-              <ion-label>star</ion-label>
+            <ion-segment-button value="07.03.2019">
+              <ion-label>07.03.2019</ion-label>
             </ion-segment-button>
-            <ion-segment-button>
-              <ion-label>call</ion-label>
-            </ion-segment-button>
-            <ion-segment-button>
-              <ion-label>globe</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="basket">
-              <ion-label>basket</ion-label>
-            </ion-segment-button>
-          </ion-segment> -->
-          <!-- <div [ngSwitch]="segmentHistory">
-            <div *ngSwitchCase="'basket'">
-              <ion-grid *ngIf="carHistory" no-padding>
-                <ion-row
-                  justify-content-center
-                  align-items-center
-                  *ngFor="let hItem of carHistory"
-                  class="border-bottom"
-                  [ngClass]="{ highlight: hItem.status === 'moving' }"
-                >
-                  <ion-col size="2" text-center>{{ hItem.startTime }}</ion-col>
+          </ion-segment>
+          <div [ngSwitch]="segmentHistory">
+            <div *ngSwitchCase="'06.03.2019'">
+              <ion-grid *ngIf="carMotionParts.length > 0" no-padding>
+                <ion-row justify-content-center align-items-center *ngFor="let hItem of carMotionParts" class="border-bottom"
+                  [ngClass]="{ highlight: hItem.motion === '' }" (click)="buildRoute(hItem)">
+                  <ion-col size="2" text-center>{{ hItem.timeStart | date:"HH:mm" }}</ion-col>
                   <ion-col size="2">
-                    <ion-chip
-                      *ngIf="hItem.status === 'parking'"
-                      style="    background-color: steelblue;
-                    color: white;"
-                      >P</ion-chip
-                    >
-                    <ion-chip *ngIf="hItem.status === 'fuel'">F</ion-chip>
-                    <ion-chip
-                      *ngIf="hItem.status === 'moving'"
-                      style="background-color: seagreen"
-                    >
-                      <ion-icon
-                        name="arrow-forward"
-                        no-margin
-                        color="light"
-                      ></ion-icon>
-                    </ion-chip>
+                    <ion-chip *ngIf="hItem.motion === 'P'" style="    background-color: steelblue;
+                    color: white;">P</ion-chip>
+                    <ion-icon *ngIf="hItem.motion === ''" name="arrow-forward" no-margin color="success"></ion-icon>
                   </ion-col>
                   <ion-col size="8" class="fs-14">
-                    <ng-container [ngSwitch]="hItem.status">
-                      <div *ngSwitchCase="'parking'">
-                        {{ hItem.currentLocation }}
-                      </div>
-                      <div *ngSwitchCase="'fuel'">
-                        <div>{{ hItem.volume }}</div>
-                        <div>{{ hItem.currentLocation }}</div>
-                      </div>
-                      <div *ngSwitchCase="'moving'" style="display: flex">
-                        <div>{{ hItem.travelTime }}</div>
-                        <div>{{ hItem.totalPath }}</div>
-                        <div>{{ hItem.averageSpeed }}</div>
-                      </div>
+                    <ng-container [ngSwitch]="hItem.motion">
+                      <div>{{ hItem.mileage }}</div>
+                      {{ hItem.addressStart }}
                     </ng-container>
                   </ion-col>
                 </ion-row>
               </ion-grid>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

@@ -55,13 +55,48 @@ export interface CarInfo {
   time: string;
 }
 
-export interface CarHistory {
-  carId?: number;
-  startTime: string;
-  status: string;
-  travelTime?: string;
-  totalPath?: number;
-  averageSpeed?: number;
-  currentLocation?: string;
-  volume?: number;
+export interface CarMotionBreakdown {
+  timeStart: string;
+  timeFinish: string;
+  motion: string;
+  addressStart: string;
+  addressFinish: string;
+  mileage: any;
+  time: string;
+  latStart: string;
+  lonStart: string;
+  latFinish: string;
+  lonFinish: string;
+}
+
+export interface CarTrack {
+  calcTime: string;
+  route: { [key: string]: CarTrackDetails };
+  numPoints: number;
+}
+
+export interface CarTrackDetails {
+  protocol: string;
+  speed: number;
+  mileage: number;
+  APC1: number;
+  APC2: number;
+  APC3: number;
+  APC4: number;
+  APC_IN_SENSOR: string;
+  APC_OUT_SENSOR: string;
+  k1: string;
+  k2: string;
+  k3: string;
+  k4: string;
+  k5: string;
+  k6: string;
+  b: string;
+  hasAPC: string;
+  time: string;
+  unixTime: string;
+  other: string;
+  latitude: number;
+  longitude: number;
+  course: string;
 }
