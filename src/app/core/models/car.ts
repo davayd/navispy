@@ -56,6 +56,7 @@ export interface CarInfo {
 }
 
 export interface CarMotionBreakdown {
+  ID: number;
   timeStart: string;
   timeFinish: string;
   motion: string;

@@ -5,18 +5,12 @@
     </ion-buttons>
     <ion-title>Слежение</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="refreshDataClick()">
-        <ion-icon name="refresh"></ion-icon>
+      <ion-button (click)="followCar()">
+        <ion-icon name="locate" [color]="isFollowCar ? 'primary' : 'medium'"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<!-- <ion-content padding>
-  <a class="sourcecode" href="https://github.com/mapsplugin/ionic-googlemaps-quickdemo-v4/blob/master/src/app/marker/marker.page.ts" target="_blank">[source code]</a>
-  <p>Click on markers!</p>
-  <div id="map_canvas"></div>
-</ion-content> -->
 
 <ion-content scrollY="false">
   <div style="display: flex; height: 100%; flex-direction: column;" *ngIf="carInfo">
@@ -147,19 +141,21 @@
           </ion-segment>
           <div [ngSwitch]="segmentHistory">
             <div *ngSwitchCase="'06.03.2019'">
-              <ion-grid *ngIf="carMotionParts.length > 0" no-padding>
-                <ion-row justify-content-center align-items-center *ngFor="let hItem of carMotionParts" class="border-bottom"
-                  [ngClass]="{ highlight: hItem.motion === '' }" (click)="buildRoute(hItem)">
+              <ion-grid *ngIf="carMotionParts.length > 0" no-padding [ngClass]="{'avoid-clicks': loadingPath === true}">
+                <ion-row justify-content-center align-items-center *ngFor="let hItem of carMotionParts"
+                  class="border-bottom" [ngClass]="{ 'active': hItem.ID === activeCarActionId }"
+                  (click)="buildRoute(hItem)">
                   <ion-col size="2" text-center>{{ hItem.timeStart | date:"HH:mm" }}</ion-col>
-                  <ion-col size="2">
-                    <ion-chip *ngIf="hItem.motion === 'P'" style="    background-color: steelblue;
-                    color: white;">P</ion-chip>
-                    <ion-icon *ngIf="hItem.motion === ''" name="arrow-forward" no-margin color="success"></ion-icon>
+                  <ion-col size="2" class="action-type">
+                    <div class="circle blue" *ngIf="hItem.motion === 'P'">P</div>
+                    <div class="circle green" *ngIf="hItem.motion === ''">
+                      <ion-icon name="arrow-forward"></ion-icon>
+                    </div>
                   </ion-col>
                   <ion-col size="8" class="fs-14">
-                    <ng-container [ngSwitch]="hItem.motion">
+                    <ng-container>
                       <div>{{ hItem.mileage }}</div>
-                      {{ hItem.addressStart }}
+                      <div class="address">{{ hItem.addressStart }}</div>
                     </ng-container>
                   </ion-col>
                 </ion-row>

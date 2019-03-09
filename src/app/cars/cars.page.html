@@ -11,7 +11,7 @@
 
 <ion-content>
   <!-- <ion-searchbar></ion-searchbar> -->
-
+  <ion-spinner *ngIf="loading"></ion-spinner>
   <ion-list>
     <ion-item *ngFor="let item of cars" (click)="navigate(item)" routerDirection="forward">
       <ion-icon slot="start" name="car" class="icon-car"></ion-icon>

@@ -5,7 +5,6 @@ import { Observable, from, of } from "rxjs";
 import { CarInfo, Car, CarMotionBreakdown, CarTrack } from "./../models/car";
 import { HTTP } from "@ionic-native/http/ngx";
 import { map } from "rxjs/operators";
-import { CAR_HISTORY } from "./mock";
 
 @Injectable({
   providedIn: "root"
@@ -54,20 +53,19 @@ export class TrackerService {
     carId: number,
     date: string
   ): Observable<CarMotionBreakdown[]> {
-    // return from(
-    //   this.http.get(
-    //     this.apiUrl +
-    //       "/php/api/get_json_motion_breakdown.php?deviceID=" +
-    //       carId +
-    //       "&from=" +
-    //       date +
-    //       "&to=" +
-    //       date,
-    //     {},
-    //     {}
-    //   )
-    // ).pipe(map(res => JSON.parse(res.data)));
-    return of(CAR_HISTORY);
+    return from(
+      this.http.get(
+        this.apiUrl +
+          "/php/api/get_json_motion_breakdown.php?deviceID=" +
+          carId +
+          "&from=" +
+          date +
+          "&to=" +
+          date,
+        {},
+        {}
+      )
+    ).pipe(map(res => JSON.parse(res.data)));
   }
 
   getCarTrack(carId: number, startDate: string, finishDate: string): Observable<CarTrack> {

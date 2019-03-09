@@ -14,7 +14,6 @@ import {
   GoogleMaps,
   GoogleMap,
   Marker,
-  PolylineOptions,
   ILatLng,
   Polyline
 } from "@ionic-native/google-maps";
@@ -41,6 +40,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
   carMotionParts: CarMotionBreakdown[];
   dateNow: moment.Moment;
   currentDate: string;
+  isFollowCar: boolean = true;
+  loadingPath: boolean = false;
 
   daysOfYear: string[] = [];
   @ViewChild(IonSlides) slides: IonSlides;
@@ -49,12 +50,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
     slidesPerView: 3
   };
 
-  polledCarInfo$: Observable<CarInfo>;
-  load$ = new BehaviorSubject("");
-
   // ROUTES
-  historyRoute: Polyline;
-  historyParking: Marker;
+  carAction: Marker | Polyline;
+  activeCarActionId: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -90,7 +88,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.daysOfYear = this.trackerService.daysOfYear;
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   ionViewWillEnter() {
     this.carId = +this.route.snapshot.paramMap.get("carId");
@@ -104,28 +102,28 @@ export class TrackingPage implements OnInit, AfterViewInit {
         this.carMotionParts = parts;
       });
 
-    const carInfoPolled$ = this.load$.pipe(
-      switchMap(_ =>
-        interval(10000).pipe(
-          startWith(0),
-          switchMap(() => this.trackerService.getCar(this.carId))
-        )
-      )
-    );
+    const carInfoPolled$ =
+      interval(10000).pipe(
+        startWith(0),
+        switchMap(() => this.trackerService.getCar(this.carId))
+      );
 
     this.timerSub = carInfoPolled$.subscribe(res => {
       console.log(res);
       this.carInfo.other.open
-        ? (res.other.open = true)
-        : (res.other.open = false);
+        ? (res.other.open === true)
+        : (res.other.open === false);
 
       this.carInfo = res;
       this.updateMap(this.carInfo);
     });
   }
 
-  refreshDataClick() {
-    this.load$.next("");
+  followCar() {
+    this.isFollowCar = !this.isFollowCar;
+    if (this.isFollowCar && this.carInfo) {
+      this.animateCamera({ lat: +this.carInfo.latitude, lng: +this.carInfo.longitude });
+    }
   }
 
   toggleSection(section: string) {
@@ -162,10 +160,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
 
   updateMap(carInfo: CarInfo) {
     if (this.map) {
-      this.map.animateCamera({
-        target: { lat: +carInfo.latitude, lng: +carInfo.longitude },
-        duration: 1000
-      });
+      if (this.isFollowCar) {
+        this.animateCamera({ lat: +carInfo.latitude, lng: +carInfo.longitude });
+      }
 
       if (this.carMarker) {
         this.carMarker.setPosition({
@@ -178,46 +175,74 @@ export class TrackingPage implements OnInit, AfterViewInit {
   }
 
   buildRoute(action: CarMotionBreakdown) {
-    // remove past tags
-    if (this.historyParking) {
-      this.historyParking.remove();
-    }
-    if (this.historyRoute) {
-      this.historyRoute.remove();
-    }
-
-    if (action.motion === "P") {
-      // draw marker and focus camera on it
-      const position = { lat: +action.latStart, lng: +action.lonStart };
-      this.historyParking = this.map.addMarkerSync({
-        position: position
-      });
-      this.map.animateCamera({
-        target: position,
-        duration: 500
-      });
-    } else if (action.motion === "") {
-      this.trackerService
-        .getCarTrack(261, "2019-03-06 13:42:30", "2019-03-06 14:26:04")
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(result => {
-          console.log(result);
-          const route = Object.values(result.route);
-          const routeCoords: ILatLng[] = route.map(routePart => {
-            return { lat: routePart.latitude, lng: routePart.longitude };
-          });
-          console.log(routeCoords);
-          this.historyRoute = this.map.addPolylineSync({
-            color: "#AA00FF",
-            width: 5,
-            points: []
-          });
-          this.historyRoute.setPoints(routeCoords);
-          this.map.animateCamera({
-            target: routeCoords,
-            duration: 500
-          });
+    if (!this.loadingPath) {
+      // active/inactive parts
+      if (this.activeCarActionId === action.ID) {
+        this.activeCarActionId = null;
+        this.removeObjects();
+        this.animateCamera({ lat: +this.carInfo.latitude, lng: +this.carInfo.longitude });
+        this.isFollowCar = true;
+        return;
+      } else {
+        this.activeCarActionId = action.ID;
+      }
+      this.loadingPath = true;
+      // disable follow
+      this.isFollowCar = false;
+      this.removeObjects();
+      // drawing marker or polyline (focus camera)
+      if (action.motion === "P") {
+        const position = { lat: +action.latStart, lng: +action.lonStart };
+        this.map.addMarker({
+          position: position,
+          icon: {
+            url: "assets/img/parking-marker.png",
+            size: {
+              width: 40,
+              height: 40
+            }
+          },
+        }).then(marker => {
+          this.carAction = marker;
+          this.animateCamera(position);
+          this.loadingPath = false;
         });
+      } else if (action.motion === "") {
+        this.trackerService
+          .getCarTrack(this.carId, action.timeStart, action.timeFinish)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(result => {
+            const routeValues = Object.values(result.route);
+            const routeCoords: ILatLng[] = routeValues.map(routePart => {
+              return { lat: routePart.latitude, lng: routePart.longitude };
+            });
+            console.log(routeCoords);
+
+            this.map.addPolyline({
+              color: "#00C853",
+              width: 5,
+              points: routeCoords
+            }).then(polyline => {
+              this.carAction = polyline;
+              this.animateCamera(routeCoords);
+              this.loadingPath = false;
+            });
+          });
+      }
+
     }
+  }
+
+  private removeObjects() {
+    if (this.carAction) {
+      this.carAction.remove();
+    }
+  }
+
+  private animateCamera(target: any) {
+    this.map.animateCamera({
+      target: target,
+      duration: 500
+    })
   }
 }
