@@ -1,0 +1,44 @@
+
+.avoid-clicks {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+ion-row {
+  position: relative;
+  &.active {
+    background-color: #dcecff;
+  }
+}
+
+.address {
+  font-size: 13px;
+  color: gray;
+}
+
+.action-type {
+  display: flex;
+  justify-content: center;
+}
+
+.circle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+
+  &.blue {
+    background-color: #0091ea;
+  }
+  &.green {
+    background-color: #00c853;
+  }
+}

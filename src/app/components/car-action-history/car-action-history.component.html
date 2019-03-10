@@ -1,0 +1,18 @@
+<ion-grid *ngIf="carActionHistory.length > 0" no-padding [ngClass]="{'avoid-clicks': loadingPath === true}">
+  <ion-row justify-content-center align-items-center *ngFor="let hItem of carActionHistory" class="border-bottom"
+    [ngClass]="{ 'active': hItem.ID === activeCarActionId }" (click)="buildRoute(hItem)">
+    <ion-col size="2" text-center>{{ hItem.timeStart | date:"HH:mm" }}</ion-col>
+    <ion-col size="2" class="action-type">
+      <div class="circle blue" *ngIf="hItem.motion === 'P'">P</div>
+      <div class="circle green" *ngIf="hItem.motion === ''">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </div>
+    </ion-col>
+    <ion-col size="8" class="fs-14">
+      <ng-container>
+        <div>{{ hItem.mileage }}</div>
+        <div class="address">{{ hItem.addressStart }}</div>
+      </ng-container>
+    </ion-col>
+  </ion-row>
+</ion-grid>

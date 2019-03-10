@@ -3,13 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MenuController, IonSlides, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
 import { CarInfo, CarMotionBreakdown } from "../core/models/car";
-import {
-  Subject,
-  Observable,
-  BehaviorSubject,
-  interval,
-  Subscription
-} from "rxjs";
+import { Subject, interval, Subscription } from "rxjs";
 import {
   GoogleMaps,
   GoogleMap,
@@ -17,6 +11,7 @@ import {
   ILatLng,
   Polyline
 } from "@ionic-native/google-maps";
+import { DatePicker } from "@ionic-native/date-picker/ngx";
 import { takeUntil, switchMap, startWith } from "rxjs/operators";
 import * as moment from "moment";
 
@@ -38,17 +33,11 @@ export class TrackingPage implements OnInit, AfterViewInit {
   map: GoogleMap;
   carMarker: Marker;
   carMotionParts: CarMotionBreakdown[];
-  dateNow: moment.Moment;
-  currentDate: string;
+  moment: moment.Moment;
+  currentDate: Date;
   isFollowCar: boolean = true;
   loadingPath: boolean = false;
-
-  daysOfYear: string[] = [];
-  @ViewChild(IonSlides) slides: IonSlides;
-  slidesOpts = {
-    initialSlide: this.daysOfYear.length - 1,
-    slidesPerView: 3
-  };
+  loadingHistory: boolean = false;
 
   // ROUTES
   carAction: Marker | Polyline;
@@ -58,7 +47,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private trackerService: TrackerService,
     private menu: MenuController,
-    private platform: Platform
+    private platform: Platform,
+    private datePicker: DatePicker
   ) {
     // tslint:disable-next-line:no-shadowed-variable
     this.menu.get().then((menu: HTMLIonMenuElement) => {
@@ -76,8 +66,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
       time: "",
       course: 0
     };
-    this.dateNow = moment();
-    this.currentDate = this.dateNow.format("DD-MM-YYYY");
+    this.moment = moment();
+    this.currentDate = new Date();
   }
 
   async ngOnInit() {
@@ -85,44 +75,74 @@ export class TrackingPage implements OnInit, AfterViewInit {
     // you have to wait the event.
     await this.platform.ready();
     await this.loadMap();
-    this.daysOfYear = this.trackerService.daysOfYear;
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   ionViewWillEnter() {
     this.carId = +this.route.snapshot.paramMap.get("carId");
     this.carName = this.route.snapshot.queryParamMap.get("name");
 
-    this.trackerService
-      .getCarMotionBreakdown(this.carId, this.currentDate)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(parts => {
-        console.log("parts", parts);
-        this.carMotionParts = parts;
-      });
-
-    const carInfoPolled$ =
-      interval(10000).pipe(
-        startWith(0),
-        switchMap(() => this.trackerService.getCar(this.carId))
-      );
+    const carInfoPolled$ = interval(10000).pipe(
+      startWith(0),
+      switchMap(() => this.trackerService.getCar(this.carId))
+    );
 
     this.timerSub = carInfoPolled$.subscribe(res => {
       console.log(res);
       this.carInfo.other.open
-        ? (res.other.open === true)
-        : (res.other.open === false);
+        ? res.other.open === true
+        : res.other.open === false;
 
       this.carInfo = res;
       this.updateMap(this.carInfo);
     });
+
+    this.getHistory(this.moment.format("DD-MM-YYYY"));
+  }
+
+  getHistory(date: any) {
+    this.carMotionParts = [];
+    this.loadingHistory = true;
+    this.trackerService
+      .getCarMotionBreakdown(this.carId, date)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(parts => {
+        console.log("parts", parts);
+        this.carMotionParts = parts;
+        this.loadingHistory = false;
+      });
+  }
+
+  selectDate() {
+    this.datePicker
+      .show({
+        date: this.currentDate,
+        mode: "date",
+        androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_LIGHT
+      })
+      .then(
+        date => {
+          this.removeObjects();
+          this.animateCamera({
+            lat: +this.carInfo.latitude,
+            lng: +this.carInfo.longitude
+          });
+          this.currentDate = date;
+          const formatDate = moment(date).format("DD-MM-YYYY");
+          this.getHistory(formatDate);
+        },
+        err => console.log("Error occurred while getting date: ", err)
+      );
   }
 
   followCar() {
     this.isFollowCar = !this.isFollowCar;
     if (this.isFollowCar && this.carInfo) {
-      this.animateCamera({ lat: +this.carInfo.latitude, lng: +this.carInfo.longitude });
+      this.animateCamera({
+        lat: +this.carInfo.latitude,
+        lng: +this.carInfo.longitude
+      });
     }
   }
 
@@ -180,7 +200,10 @@ export class TrackingPage implements OnInit, AfterViewInit {
       if (this.activeCarActionId === action.ID) {
         this.activeCarActionId = null;
         this.removeObjects();
-        this.animateCamera({ lat: +this.carInfo.latitude, lng: +this.carInfo.longitude });
+        this.animateCamera({
+          lat: +this.carInfo.latitude,
+          lng: +this.carInfo.longitude
+        });
         this.isFollowCar = true;
         return;
       } else {
@@ -193,20 +216,22 @@ export class TrackingPage implements OnInit, AfterViewInit {
       // drawing marker or polyline (focus camera)
       if (action.motion === "P") {
         const position = { lat: +action.latStart, lng: +action.lonStart };
-        this.map.addMarker({
-          position: position,
-          icon: {
-            url: "assets/img/parking-marker.png",
-            size: {
-              width: 40,
-              height: 40
+        this.map
+          .addMarker({
+            position: position,
+            icon: {
+              url: "assets/img/parking-marker.png",
+              size: {
+                width: 40,
+                height: 40
+              }
             }
-          },
-        }).then(marker => {
-          this.carAction = marker;
-          this.animateCamera(position);
-          this.loadingPath = false;
-        });
+          })
+          .then(marker => {
+            this.carAction = marker;
+            this.animateCamera(position);
+            this.loadingPath = false;
+          });
       } else if (action.motion === "") {
         this.trackerService
           .getCarTrack(this.carId, action.timeStart, action.timeFinish)
@@ -218,18 +243,19 @@ export class TrackingPage implements OnInit, AfterViewInit {
             });
             console.log(routeCoords);
 
-            this.map.addPolyline({
-              color: "#00C853",
-              width: 5,
-              points: routeCoords
-            }).then(polyline => {
-              this.carAction = polyline;
-              this.animateCamera(routeCoords);
-              this.loadingPath = false;
-            });
+            this.map
+              .addPolyline({
+                color: "#00C853",
+                width: 5,
+                points: routeCoords
+              })
+              .then(polyline => {
+                this.carAction = polyline;
+                this.animateCamera(routeCoords);
+                this.loadingPath = false;
+              });
           });
       }
-
     }
   }
 
@@ -243,6 +269,6 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.map.animateCamera({
       target: target,
       duration: 500
-    })
+    });
   }
 }
