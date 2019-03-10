@@ -10,7 +10,10 @@
     </ion-col>
     <ion-col size="8" class="fs-14">
       <ng-container>
-        <div>{{ hItem.mileage }}</div>
+        <div *ngIf="hItem.motion === ''">
+          <img src="assets/img/distance.png" width="16" height="16">
+          <span class="mileage">{{ hItem.mileage }} <span class="notation">м.</span></span>
+        </div>
         <div class="address">{{ hItem.addressStart }}</div>
       </ng-container>
     </ion-col>
