@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -10,10 +10,10 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-searchbar></ion-searchbar> -->
+  <ion-searchbar [(ngModel)]="carsFilter.name" placeholder="Поиск"></ion-searchbar>
   <ion-spinner *ngIf="loading"></ion-spinner>
-  <ion-list>
-    <ion-item *ngFor="let item of cars" (click)="navigate(item)" routerDirection="forward" class="ion-activatable">
+  <ion-list no-padding *ngIf="cars.length > 0">
+    <ion-item *ngFor="let item of cars | filterBy: carsFilter" (click)="navigate(item)" routerDirection="forward" class="ion-activatable">
       <ion-ripple-effect></ion-ripple-effect>
       <ion-icon slot="start" name="car" class="icon-car"></ion-icon>
       <ion-label>
@@ -28,6 +28,9 @@
           {{item.totalPath}}км
         </div> -->
       </ion-label>
+    </ion-item>
+    <ion-item *ngIf="(cars | filterBy: carsFilter).length === 0">
+      No matching elements
     </ion-item>
   </ion-list>
 </ion-content>

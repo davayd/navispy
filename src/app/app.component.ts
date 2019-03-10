@@ -23,6 +23,8 @@ export class AppComponent {
     icon: "exit"
   };
 
+  userName: string;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -44,11 +46,12 @@ export class AppComponent {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = false;
     });
+    this.userName = localStorage.getItem("login");
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleLightContent();
+      this.statusBar.backgroundColorByHexString("356D92");
       this.splashScreen.hide();
     });
   }

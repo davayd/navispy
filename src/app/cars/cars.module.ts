@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { CarsPage } from './cars.page';
+import { FilterPipeModule } from 'ngx-filter-pipe';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { CarsPage } from './cars.page';
         path: '',
         component: CarsPage
       }
-    ])
+    ]),
+    FilterPipeModule
   ],
   declarations: [CarsPage]
 })

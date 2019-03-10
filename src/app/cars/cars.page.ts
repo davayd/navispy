@@ -15,6 +15,7 @@ export class CarsPage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   cars: Car[] = [];
+  carsFilter: any = { name: '' };
   loading: boolean = false;
 
   constructor(
@@ -22,14 +23,17 @@ export class CarsPage implements OnInit, OnDestroy {
     private router: Router,
     private platform: Platform,
     private menu: MenuController
-  ) {}
+  ) { }
 
-  async ngOnInit() {
-    await this.platform.ready();
+  ionViewWillEnter() {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = true;
     });
     this.init();
+  }
+
+  async ngOnInit() {
+    await this.platform.ready();
   }
 
   private init() {

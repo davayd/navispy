@@ -1,26 +1,19 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
     </ion-buttons>
     <ion-title>Слежение</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="followCar()">
-        <ion-icon
-          name="locate"
-          [color]="isFollowCar ? 'primary' : 'medium'"
-        ></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="false">
-  <div
-    style="display: flex; height: 100%; flex-direction: column;"
-    *ngIf="carInfo"
-  >
-    <div id="map_canvas"></div>
+  <div style="display: flex; height: 100%; flex-direction: column;" *ngIf="carInfo">
+    <div id="map_canvas">
+      <ion-fab-button size="small" (click)="followCar()" color="white">
+        <ion-icon name="locate" [color]="isFollowCar ? 'primary' : 'medium'" size="small"></ion-icon>
+      </ion-fab-button>
+    </div>
 
     <ion-item *ngIf="carName" lines="none" class="border-bottom">
       <ion-icon slot="start" name="car" class="icon-car"></ion-icon>
@@ -41,35 +34,13 @@
       <div [ngSwitch]="segmentSpecification">
         <div *ngSwitchCase="'info'">
           <ion-list no-padding>
-            <ion-button
-              expand="full"
-              color="medium"
-              *ngIf="carInfo.other"
-              (click)="toggleSection('other')"
-              no-margin
-            >
+            <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
               ДРУГОЕ
-              <ion-icon
-                slot="end"
-                name="arrow-dropdown"
-                *ngIf="!carInfo.other.open"
-              ></ion-icon>
-              <ion-icon
-                slot="end"
-                name="arrow-dropup"
-                *ngIf="carInfo.other.open"
-              ></ion-icon>
+              <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.other.open"></ion-icon>
+              <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.other.open"></ion-icon>
             </ion-button>
-            <ion-list
-              *ngIf="carInfo.other && carInfo.other.open"
-              no-padding
-              style=" transition: 0.2s linear;"
-            >
-              <ion-item
-                *ngFor="let item of (carInfo.other | keyvalue)"
-                lines="none"
-                class="border-bottom fs-14"
-              >
+            <ion-list *ngIf="carInfo.other && carInfo.other.open" no-padding style=" transition: 0.2s linear;">
+              <ion-item *ngFor="let item of (carInfo.other | keyvalue)" lines="none" class="border-bottom fs-14">
                 <ion-label text-wrap color="primary">
                   {{ item.key }}
                 </ion-label>
@@ -147,51 +118,14 @@
         </div>
 
         <div *ngSwitchCase="'history'">
-          <!-- <ion-slides class="border-bottom" [options]="slidesOpts">
-            <ion-slide *ngFor="let day of daysOfYear">
-              <span>{{ day }}</span>
-            </ion-slide>
-          </ion-slides> -->
-
-          <!-- <ion-segment
-            [(ngModel)]="segmentHistory"
-            scrollable
-            class="border-bottom fs-14"
-          >
-            <ion-segment-button value="04.03.2019">
-              <ion-label>04.03.2019</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="05.03.2019">
-              <ion-label>05.03.2019</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="06.03.2019" checked>
-              <ion-label>06.03.2019</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="07.03.2019">
-              <ion-label>07.03.2019</ion-label>
-            </ion-segment-button>
-          </ion-segment> -->
-
-          <div
-            (click)="selectDate()"
-            class=" history-date border-bottom"
-            text-center
-          >
+          <div (click)="selectDate()" class=" history-date border-bottom" text-center>
             <ion-icon name="calendar" padding-right></ion-icon>
             {{ currentDate | date }}
           </div>
-          <app-car-action-history
-            *ngIf="carMotionParts.length > 0"
-            [carActionHistory]="carMotionParts"
-            [loadingPath]="loadingPath"
-            [activeCarActionId]="activeCarActionId"
-            (onBuildRoute)="buildRoute($event)"
-          ></app-car-action-history>
-          <div
-            padding
-            text-center
-            *ngIf="carMotionParts.length === 0 && !loadingHistory"
-          >
+          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts"
+            [loadingPath]="loadingPath" [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
+          </app-car-action-history>
+          <div padding text-center *ngIf="carMotionParts.length === 0 && !loadingHistory">
             <ion-text color="medium">
               Данных на этот день нет.
             </ion-text>
