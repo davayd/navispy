@@ -25,7 +25,7 @@
             {{error}}
           </ion-text>
           <div class="form-group" padding>
-            <ion-button [disabled]="loading" expand="block" fill="outline" color="medium" (click)="login()">
+            <ion-button [disabled]="loading" expand="block" color="primary" (click)="login()">
               <ion-text *ngIf="!loading">Войти</ion-text>
               <ion-spinner *ngIf="loading"></ion-spinner>
             </ion-button>

@@ -35,9 +35,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
   carMotionParts: CarMotionBreakdown[];
   moment: moment.Moment;
   currentDate: Date;
-  isFollowCar: boolean = true;
-  loadingPath: boolean = false;
-  loadingHistory: boolean = false;
+  isFollowCar = true;
+  loadingPath = false;
+  loadingHistory = false;
 
   // ROUTES
   carAction: Marker | Polyline;
@@ -90,10 +90,11 @@ export class TrackingPage implements OnInit, AfterViewInit {
 
     this.timerSub = carInfoPolled$.subscribe(res => {
       console.log(res);
-      this.carInfo.other.open
-        ? res.other.open === true
-        : res.other.open === false;
-
+      if (this.carInfo.other.open) {
+        res.other.open = true;
+      } else {
+        res.other.open = false;
+      }
       this.carInfo = res;
       this.updateMap(this.carInfo);
     });
