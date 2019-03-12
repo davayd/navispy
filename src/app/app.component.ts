@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 
-import { Platform, MenuController } from "@ionic/angular";
+import { Platform, MenuController, Events } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -30,7 +30,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menu: MenuController,
-    private router: Router
+    private router: Router,
+    private events: Events
   ) {
     const isAuth = localStorage.getItem("auth");
     if (!isAuth) {
@@ -47,6 +48,9 @@ export class AppComponent {
       menu.swipeGesture = false;
     });
     this.userName = localStorage.getItem("login");
+    this.events.subscribe("user:login", () => {
+      this.userName = localStorage.getItem("login");
+    });
   }
 
   initializeApp() {

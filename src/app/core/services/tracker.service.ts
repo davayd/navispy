@@ -56,7 +56,7 @@ export class TrackerService {
     return from(
       this.http.get(
         this.apiUrl +
-          "/php/api/get_json_motion_breakdown.php?deviceID=" +
+          "/php/api/get_json_motion_breakdown.php?extended=deviceID=" +
           carId +
           "&from=" +
           date +

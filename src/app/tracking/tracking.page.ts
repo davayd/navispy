@@ -64,7 +64,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
       other: {},
       speed: "",
       time: "",
-      course: 0
+      course: 0,
+      address: ""
     };
     this.moment = moment();
     this.currentDate = new Date();

@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { first } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
+import { Platform, Events } from "@ionic/angular";
 
 @Component({
   selector: "app-login",
@@ -20,8 +21,12 @@ export class LoginPage implements OnInit, OnDestroy {
   constructor(
     private trackerService: TrackerService,
     private formBuilder: FormBuilder,
-    private router: Router
-  ) {}
+    private router: Router,
+    private platform: Platform,
+    private events: Events
+  ) {
+    this.backButtonEvent();
+  }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -59,12 +64,19 @@ export class LoginPage implements OnInit, OnDestroy {
             localStorage.setItem("login", this.f.username.value);
             localStorage.setItem("password", this.f.password.value);
             this.router.navigate(["/cars"]);
+            this.events.publish('user:login');
           }
         },
         error => {
           console.error(error);
         }
       );
+  }
+
+  private backButtonEvent() {
+    this.platform.backButton.subscribe(() => {
+      navigator["app"].exitApp();
+    });
   }
 
   ngOnDestroy() {}

@@ -27,10 +27,11 @@
           <ion-icon name="trending-up"></ion-icon>
           {{item.totalPath}}км
         </div> -->
+        <p>{{item.address}}</p>
       </ion-label>
     </ion-item>
     <ion-item *ngIf="(cars | filterBy: carsFilter).length === 0">
-      No matching elements
+      Нет подходящих элементов
     </ion-item>
   </ion-list>
 </ion-content>

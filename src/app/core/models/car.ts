@@ -1,7 +1,7 @@
 export interface Car {
   id: number;
   name: string;
-  // make: string;
+  address: string;
   // model: string;
   // lastUpdated: number;
   // startTime: string;
@@ -53,6 +53,7 @@ export interface CarInfo {
   longitude: string;
   course: number;
   time: string;
+  address: string;
 }
 
 export interface CarMotionBreakdown {

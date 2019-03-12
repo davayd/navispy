@@ -15,15 +15,17 @@ export class CarsPage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
   cars: Car[] = [];
-  carsFilter: any = { name: '' };
-  loading: boolean = false;
+  carsFilter: any = { name: "" };
+  loading = false;
 
   constructor(
     private trackerService: TrackerService,
     private router: Router,
     private platform: Platform,
     private menu: MenuController
-  ) { }
+  ) {
+    this.backButtonEvent();
+  }
 
   ionViewWillEnter() {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
@@ -60,6 +62,12 @@ export class CarsPage implements OnInit, OnDestroy {
     };
 
     this.router.navigate(["/track", car.id], navigationExtras);
+  }
+
+  private backButtonEvent() {
+    this.platform.backButton.subscribe(() => {
+      navigator["app"].exitApp();
+    });
   }
 
   ngOnDestroy() {
