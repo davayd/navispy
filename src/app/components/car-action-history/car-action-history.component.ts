@@ -8,7 +8,7 @@ import { CarMotionBreakdown } from 'src/app/core/models/car';
 })
 export class CarActionHistoryComponent {
   @Input() carActionHistory: CarMotionBreakdown[];
-  @Input() loadingPath: boolean = false;
+  @Input() loadingPath = false;
   @Input() activeCarActionId: number;
   @Output() onBuildRoute = new EventEmitter<CarMotionBreakdown>();
 

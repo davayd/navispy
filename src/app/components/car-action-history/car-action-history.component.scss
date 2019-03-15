@@ -9,6 +9,9 @@ ion-row {
   &.active {
     background-color: #dcecff;
   }
+  &.stripped {
+    background-color: #eeffec;
+  }
 }
 
 .address {
@@ -26,20 +29,21 @@ ion-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   font-size: 20px;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
-  color: #fff;
   text-align: center;
+  border: 1px solid gray;
 
   &.blue {
-    background-color: #0091ea;
+    border: 1px solid var(--color-blue);
   }
+
   &.green {
-    background-color: #00c853;
+    border: 1px solid var(--color-green);
   }
 }
 
@@ -49,9 +53,15 @@ ion-thumbnail {
 
 .mileage {
   padding-left: 5px;
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .notation {
   font-size: 12px;
+}
+
+.indicators {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
 }

@@ -6,6 +6,8 @@ import { IonicModule } from "@ionic/angular";
 
 import { TrackingPage } from "./tracking.page";
 import { CarActionHistoryComponent } from "../components/car-action-history/car-action-history.component";
+import { CarTotalHistoryComponent } from '../components/total-history/total-history.component';
+import { CarSensorIndicatorComponent } from '../components/sensor-indicator/sensor-indicator.component';
 
 const routes: Routes = [
   {
@@ -21,6 +23,11 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TrackingPage, CarActionHistoryComponent]
+  declarations: [
+    TrackingPage,
+    CarActionHistoryComponent,
+    CarTotalHistoryComponent,
+    CarSensorIndicatorComponent
+  ]
 })
 export class TrackingPageModule {}

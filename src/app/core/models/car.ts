@@ -54,8 +54,16 @@ export interface CarInfo {
   course: number;
   time: string;
   address: string;
+  fuelLevel: number;
+  fuelConsumption: string;
 }
 
+export interface CarMotionHistory {
+  breakdown: CarMotionBreakdown[];
+  mileageTotal: number;
+  driveTimeTotal: number;
+  parkingTimeTotal: number;
+}
 export interface CarMotionBreakdown {
   ID: number;
   timeStart: string;
@@ -101,4 +109,10 @@ export interface CarTrackDetails {
   latitude: number;
   longitude: number;
   course: string;
+}
+
+export interface CarMotionTotals {
+  mileage?: number;
+  driveTime?: number;
+  parkingTime?: number;
 }

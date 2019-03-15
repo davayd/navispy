@@ -6,12 +6,16 @@
     <ion-title>
       Объекты
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-spinner *ngIf="loading"></ion-spinner>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-searchbar [(ngModel)]="carsFilter.name" placeholder="Поиск"></ion-searchbar>
-  <ion-spinner *ngIf="loading"></ion-spinner>
   <ion-list no-padding *ngIf="cars.length > 0">
     <ion-item *ngFor="let item of cars | filterBy: carsFilter" (click)="navigate(item)" routerDirection="forward" class="ion-activatable">
       <ion-ripple-effect></ion-ripple-effect>

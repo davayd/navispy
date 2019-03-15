@@ -10,9 +10,11 @@
 <ion-content scrollY="false">
   <div style="display: flex; height: 100%; flex-direction: column;" *ngIf="carInfo">
     <div id="map_canvas">
-      <ion-fab-button size="small" (click)="followCar()" color="white">
-        <ion-icon name="locate" [color]="isFollowCar ? 'primary' : 'medium'" size="small"></ion-icon>
-      </ion-fab-button>
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button size="small" (click)="followCar()" color="white">
+          <ion-icon name="locate" [color]="isFollowCar ? 'primary' : 'medium'" size="small"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </div>
 
     <ion-item *ngIf="carName" lines="none" class="border-bottom">
@@ -50,71 +52,16 @@
                 </ion-label>
               </ion-item>
             </ion-list>
-
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Пробег (текущий день)
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.mileage }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                DUT1
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.DUT1 }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                DUT2
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.DUT2 }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                DUT3
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.DUT3 }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Скорость
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.speed }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Широта
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.latitude }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Долгота
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.longitude }}
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Время обновления
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ carInfo.time }}
-              </ion-label>
-            </ion-item>
+            <app-sensor-indicator [indicatorName]="'Пробег (текущий день)'" [indicatorValue]="carInfo.mileage"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Уровень топлива'" [indicatorValue]="carInfo.fuelLevel"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Расход топлива'" [indicatorValue]="carInfo.fuelConsumption"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'DUT1'" [indicatorValue]="carInfo.DUT1"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'DUT2'" [indicatorValue]="carInfo.DUT2"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'DUT3'" [indicatorValue]="carInfo.DUT3"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Скорость'" [indicatorValue]="carInfo.speed"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Широта'" [indicatorValue]="carInfo.latitude"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Долгота'" [indicatorValue]="carInfo.longitude"></app-sensor-indicator>
+            <app-sensor-indicator [indicatorName]="'Время обновления'" [indicatorValue]="carInfo.time"></app-sensor-indicator>
           </ion-list>
         </div>
 
@@ -123,8 +70,9 @@
             <ion-icon name="calendar" padding-right></ion-icon>
             {{ currentDate | date }}
           </div>
-          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts"
-            [loadingPath]="loadingPath" [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
+          <app-total-history *ngIf="carMotionTotals" [carMotionTotals]="carMotionTotals"></app-total-history>
+          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts" [loadingPath]="loadingPath"
+            [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
           </app-car-action-history>
           <div padding text-center *ngIf="carMotionParts.length === 0 && !loadingHistory">
             <ion-text color="medium">

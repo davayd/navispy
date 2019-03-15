@@ -1,20 +1,33 @@
 <ion-grid *ngIf="carActionHistory.length > 0" no-padding [ngClass]="{'avoid-clicks': loadingPath === true}">
   <ion-row justify-content-center align-items-center *ngFor="let hItem of carActionHistory" class="border-bottom"
-    [ngClass]="{ 'active': hItem.ID === activeCarActionId }" (click)="buildRoute(hItem)">
+    [ngClass]="{ 'active': hItem.ID === activeCarActionId, 'stripped': hItem.motion === '' }" (click)="buildRoute(hItem)">
     <ion-col size="2" text-center>{{ hItem.timeStart | date:"HH:mm" }}</ion-col>
     <ion-col size="2" class="action-type">
-      <div class="circle blue" *ngIf="hItem.motion === 'P'">P</div>
+      <div class="circle blue" *ngIf="hItem.motion === 'P'">
+        <img src="assets/img/parking.svg" width="16" height="16">
+      </div>
       <div class="circle green" *ngIf="hItem.motion === ''">
-        <ion-icon name="arrow-forward"></ion-icon>
+        <img src="assets/img/delivery.svg" width="16" height="16">
       </div>
     </ion-col>
     <ion-col size="8" class="fs-14">
       <ng-container>
-        <div *ngIf="hItem.motion === ''">
-          <img src="assets/img/distance.png" width="16" height="16">
-          <span class="mileage">{{ hItem.mileage }} <span class="notation">м.</span></span>
+        <ion-grid no-padding *ngIf="hItem.motion === ''">
+          <ion-row>
+            <ion-col size="6" no-padding>
+              <img src="assets/img/time.svg" width="16" height="16">
+              <span class="mileage">{{ hItem.time }}</span>
+            </ion-col>
+            <ion-col size="6" no-padding>
+              <img src="assets/img/distance.svg" width="16" height="16">
+              <span class="mileage">{{ hItem.mileage }} <span class="notation">м.</span></span>
+            </ion-col>
+            <!-- <ion-col size="4" no-padding></ion-col> -->
+          </ion-row>
+        </ion-grid>
+        <div *ngIf="hItem.motion === 'P'">
+          <div class="address">{{ hItem.addressStart }}</div>
         </div>
-        <div class="address">{{ hItem.addressStart }}</div>
       </ng-container>
     </ion-col>
   </ion-row>

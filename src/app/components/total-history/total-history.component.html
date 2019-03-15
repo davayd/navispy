@@ -1,0 +1,37 @@
+<ion-grid no-padding *ngIf="carMotionTotals">
+  <ion-row>
+    <ion-col size="4" no-padding>
+      <div class="indicator separator">
+        <div class="circle green">
+          <img src="assets/img/delivery.svg" width="16" height="16">
+        </div>
+        <div>
+          {{timeDriveHours}}<span class="notation">ч.</span>
+          {{timeDriveMinutes}}<span class="notation">мин.</span>
+        </div>
+      </div>
+    </ion-col>
+
+    <ion-col size="4" no-padding>
+      <div class="indicator separator">
+        <div class="circle">
+          <img src="assets/img/distance.svg" width="16" height="16">
+        </div>
+        <div>
+          {{carMotionTotals.mileage}}<span class="notation">км.</span>
+        </div>
+      </div>
+    </ion-col>
+    <ion-col size="4" no-padding>
+      <div class="indicator">
+        <div class="circle blue">
+          <img src="assets/img/parking.svg" width="16" height="16">
+        </div>
+        <div>
+          {{timeParkingHours}}<span class="notation">ч.</span>
+          {{timeParkingMinutes}}<span class="notation">мин.</span>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -1,0 +1,43 @@
+.indicator {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #298dff;
+  color: white;
+  padding: 8px 5px;
+
+  &.separator {
+    margin-right: 1px;
+  }
+
+}
+
+.circle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 0 0 1px white;
+  border: 1px solid black;
+  color: black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+  margin-right: 5px;
+
+  &.blue {
+    border: 1px solid var(--color-blue);
+  }
+
+  &.green {
+    border: 1px solid var(--color-green);
+  }
+}
+
+.notation {
+  font-size: 12px;
+}

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuController, IonSlides, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
-import { CarInfo, CarMotionBreakdown } from "../core/models/car";
+import { CarInfo, CarMotionBreakdown, CarMotionTotals } from "../core/models/car";
 import { Subject, interval, Subscription } from "rxjs";
 import {
   GoogleMaps,
@@ -33,6 +33,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
   map: GoogleMap;
   carMarker: Marker;
   carMotionParts: CarMotionBreakdown[];
+  carMotionTotals: CarMotionTotals = {};
   moment: moment.Moment;
   currentDate: Date;
   isFollowCar = true;
@@ -65,7 +66,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
       speed: "",
       time: "",
       course: 0,
-      address: ""
+      address: "",
+      fuelConsumption: "",
+      fuelLevel: 0
     };
     this.moment = moment();
     this.currentDate = new Date();
@@ -105,13 +108,19 @@ export class TrackingPage implements OnInit, AfterViewInit {
 
   getHistory(date: any) {
     this.carMotionParts = [];
+    this.carMotionTotals = null;
     this.loadingHistory = true;
     this.trackerService
-      .getCarMotionBreakdown(this.carId, date)
+      .getCarMotionHistory(this.carId, date)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(parts => {
-        console.log("parts", parts);
-        this.carMotionParts = parts;
+      .subscribe(history => {
+        console.log("history", history);
+        this.carMotionTotals = {
+          mileage: history.mileageTotal,
+          driveTime: history.driveTimeTotal,
+          parkingTime: history.parkingTimeTotal
+        };
+        this.carMotionParts = history.breakdown;
         this.loadingHistory = false;
       });
   }
@@ -170,9 +179,9 @@ export class TrackingPage implements OnInit, AfterViewInit {
       position: { lat: +this.carInfo.latitude, lng: +this.carInfo.longitude },
       id: this.carId,
       icon: {
-        url: "assets/img/arrow3.png",
+        url: "assets/img/arrow.png",
         size: {
-          width: 30,
+          width: 20,
           height: 30
         }
       },
