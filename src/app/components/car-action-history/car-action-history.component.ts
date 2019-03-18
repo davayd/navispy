@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CarMotionBreakdown } from 'src/app/core/models/car';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { CarMotionBreakdown } from "src/app/core/models/car";
+import * as moment from "moment";
 
 @Component({
   selector: "app-car-action-history",
@@ -12,8 +13,18 @@ export class CarActionHistoryComponent {
   @Input() activeCarActionId: number;
   @Output() onBuildRoute = new EventEmitter<CarMotionBreakdown>();
 
-  constructor() {
+  constructor() {}
 
+  driveTimeHours(time: number) {
+    return moment("2000-01-01 00:00:00")
+      .millisecond(time)
+      .hours();
+  }
+
+  driveTimeMinutes(time: number) {
+    return moment("2000-01-01 00:00:00")
+      .millisecond(time)
+      .minutes();
   }
 
   buildRoute(action: CarMotionBreakdown) {

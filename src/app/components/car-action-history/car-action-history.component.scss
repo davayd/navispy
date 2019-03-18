@@ -7,7 +7,7 @@
 ion-row {
   position: relative;
   &.active {
-    background-color: #dcecff;
+    background-color: #dcecff !important;
   }
   &.stripped {
     background-color: #eeffec;
@@ -57,7 +57,7 @@ ion-thumbnail {
 }
 
 .notation {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .indicators {

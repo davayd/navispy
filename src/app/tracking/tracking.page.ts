@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MenuController, IonSlides, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
 import { CarInfo, CarMotionBreakdown, CarMotionTotals } from "../core/models/car";
-import { Subject, interval, Subscription } from "rxjs";
+import { Subject, interval, Subscription, timer } from "rxjs";
 import {
   GoogleMaps,
   GoogleMap,
@@ -78,7 +78,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
     // Since ngOnInit() is executed before `deviceready` event,
     // you have to wait the event.
     await this.platform.ready();
-    await this.loadMap();
+    await setTimeout(() => this.loadMap(), 500);
   }
 
   ngAfterViewInit() {}
@@ -87,8 +87,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.carId = +this.route.snapshot.paramMap.get("carId");
     this.carName = this.route.snapshot.queryParamMap.get("name");
 
-    const carInfoPolled$ = interval(10000).pipe(
-      startWith(0),
+    const carInfoPolled$ = timer(2000, 10000).pipe(
+      // startWith(2000),
       switchMap(() => this.trackerService.getCar(this.carId))
     );
 

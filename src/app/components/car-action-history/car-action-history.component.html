@@ -16,11 +16,13 @@
           <ion-row>
             <ion-col size="6" no-padding>
               <img src="assets/img/time.svg" width="16" height="16">
-              <span class="mileage">{{ hItem.time }}</span>
+              <span *ngIf="driveTimeHours(hItem.time2) > 0" class="mileage">{{driveTimeHours(hItem.time2)}} <span class="notation">ч.</span></span>
+              <span class="mileage">{{driveTimeMinutes(hItem.time2)}}</span><span class="notation">мин.</span>
+              <!-- <span class="mileage">driveTime(hItem.time2)</span> -->
             </ion-col>
             <ion-col size="6" no-padding>
-              <img src="assets/img/distance.svg" width="16" height="16">
-              <span class="mileage">{{ hItem.mileage }} <span class="notation">м.</span></span>
+              <img src="assets/img/distance1.svg" width="16" height="16">
+              <span class="mileage">{{ hItem.mileage.toFixed(2) }}<span class="notation">км.</span></span>
             </ion-col>
             <!-- <ion-col size="4" no-padding></ion-col> -->
           </ion-row>

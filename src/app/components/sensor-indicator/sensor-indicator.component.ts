@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { CarInfo } from "src/app/core/models/car";
 
 @Component({
   selector: "app-sensor-indicator",

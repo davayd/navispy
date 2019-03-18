@@ -73,6 +73,7 @@ export interface CarMotionBreakdown {
   addressFinish: string;
   mileage: any;
   time: string;
+  time2: number;
   latStart: string;
   lonStart: string;
   latFinish: string;
