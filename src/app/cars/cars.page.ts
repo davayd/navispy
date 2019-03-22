@@ -17,6 +17,10 @@ export class CarsPage implements OnInit, OnDestroy {
   cars: Car[] = [];
   carsFilter: any = { name: "" };
   loading = false;
+  isError = false;
+
+  login: string;
+  password: string;
 
   constructor(
     private trackerService: TrackerService,
@@ -31,29 +35,37 @@ export class CarsPage implements OnInit, OnDestroy {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = true;
     });
-    this.init();
+    this.login = localStorage.getItem("login");
+    this.password = localStorage.getItem("password");
+
+    if (!this.login || !this.password) {
+      this.router.navigate(["/login"]);
+    } else {
+      this.getCars();
+    }
   }
 
   async ngOnInit() {
     await this.platform.ready();
   }
 
-  private init() {
-    const login = localStorage.getItem("login");
-    const password = localStorage.getItem("password");
+  getCars() {
+    this.loading = true;
+    this.isError = false;
 
-    if (!login || !password) {
-      this.router.navigate(["/login"]);
-    } else {
-      this.loading = true;
-      this.trackerService
-        .getCars(login, password)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(cars => {
+    this.trackerService
+      .getCars(this.login, this.password)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        cars => {
           this.cars = cars;
           this.loading = false;
-        });
-    }
+        },
+        error => {
+          this.isError = true;
+          this.loading = false;
+        }
+      );
   }
 
   navigate(car: Car) {

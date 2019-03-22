@@ -1,9 +1,13 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { MenuController, IonSlides, Platform } from "@ionic/angular";
+import { MenuController, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
-import { CarInfo, CarMotionBreakdown, CarMotionTotals } from "../core/models/car";
-import { Subject, interval, Subscription, timer } from "rxjs";
+import {
+  CarInfo,
+  CarMotionBreakdown,
+  CarMotionTotals
+} from "../core/models/car";
+import { Subject, Subscription, timer } from "rxjs";
 import {
   GoogleMaps,
   GoogleMap,
@@ -12,7 +16,7 @@ import {
   Polyline
 } from "@ionic-native/google-maps";
 import { DatePicker } from "@ionic-native/date-picker/ngx";
-import { takeUntil, switchMap, startWith } from "rxjs/operators";
+import { takeUntil, switchMap } from "rxjs/operators";
 import * as moment from "moment";
 
 @Component({
@@ -28,8 +32,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
   carId: number;
   carName: string;
   defaultHref = "cars";
-  segmentSpecification = "info";
-  segmentHistory = "basket";
+  activeTab = "info";
   map: GoogleMap;
   carMarker: Marker;
   carMotionParts: CarMotionBreakdown[];
@@ -37,8 +40,12 @@ export class TrackingPage implements OnInit, AfterViewInit {
   moment: moment.Moment;
   currentDate: Date;
   isFollowCar = true;
-  loadingPath = false;
-  loadingHistory = false;
+
+  loading_Path = false; // загрузка построения пути на карте
+  loading_Info = false; // загрузка всех данных при входе на страницу
+  isError_Info = false; // ошибка загрузки информации по машине
+  loading_MotionHistory = false; // загрузка истории передвижений
+  isError_MotionHistory = false; // ошибка загрузки истории движения
 
   // ROUTES
   carAction: Marker | Polyline;
@@ -87,42 +94,60 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.carId = +this.route.snapshot.paramMap.get("carId");
     this.carName = this.route.snapshot.queryParamMap.get("name");
 
-    const carInfoPolled$ = timer(2000, 10000).pipe(
-      // startWith(2000),
-      switchMap(() => this.trackerService.getCar(this.carId))
-    );
-
-    this.timerSub = carInfoPolled$.subscribe(res => {
-      console.log(res);
-      if (this.carInfo.other.open) {
-        res.other.open = true;
-      } else {
-        res.other.open = false;
-      }
-      this.carInfo = res;
-      this.updateMap(this.carInfo);
-    });
-
-    this.getHistory(this.moment.format("DD-MM-YYYY"));
+    this.getCarDetails();
+    this.getMotionHistory(this.moment.format("DD-MM-YYYY"));
   }
 
-  getHistory(date: any) {
+  getCarDetails() {
+    this.isError_Info = false;
+    this.loading_Info = true;
+    const carInfoPolled$ = timer(2000, 10000).pipe(
+      switchMap(() => this.trackerService.getCar(this.carId))
+    );
+    this.timerSub = carInfoPolled$.subscribe(
+      res => {
+        this.loading_Info = false;
+        console.log(res);
+        if (this.carInfo.other.open) {
+          res.other.open = true;
+        } else {
+          res.other.open = false;
+        }
+        this.carInfo = res;
+        this.updateMap(this.carInfo);
+      },
+      error => {
+        this.isError_Info = true;
+        this.loading_Info = false;
+        this.timerSub.unsubscribe();
+      }
+    );
+  }
+
+  getMotionHistory(date: any) {
     this.carMotionParts = [];
     this.carMotionTotals = null;
-    this.loadingHistory = true;
+    this.loading_MotionHistory = true;
+    this.isError_MotionHistory = false;
     this.trackerService
       .getCarMotionHistory(this.carId, date)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(history => {
-        console.log("history", history);
-        this.carMotionTotals = {
-          mileage: history.mileageTotal,
-          driveTime: history.driveTimeTotal,
-          parkingTime: history.parkingTimeTotal
-        };
-        this.carMotionParts = history.breakdown;
-        this.loadingHistory = false;
-      });
+      .subscribe(
+        history => {
+          console.log("history", history);
+          this.carMotionTotals = {
+            mileage: history.mileageTotal,
+            driveTime: history.driveTimeTotal,
+            parkingTime: history.parkingTimeTotal
+          };
+          this.carMotionParts = history.breakdown;
+          this.loading_MotionHistory = false;
+        },
+        error => {
+          this.loading_MotionHistory = false;
+          this.isError_MotionHistory = true;
+        }
+      );
   }
 
   selectDate() {
@@ -141,7 +166,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
           });
           this.currentDate = date;
           const formatDate = moment(date).format("DD-MM-YYYY");
-          this.getHistory(formatDate);
+          this.getMotionHistory(formatDate);
         },
         err => console.log("Error occurred while getting date: ", err)
       );
@@ -206,7 +231,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
   }
 
   buildRoute(action: CarMotionBreakdown) {
-    if (!this.loadingPath) {
+    if (!this.loading_Path) {
       // active/inactive parts
       if (this.activeCarActionId === action.ID) {
         this.activeCarActionId = null;
@@ -220,11 +245,11 @@ export class TrackingPage implements OnInit, AfterViewInit {
       } else {
         this.activeCarActionId = action.ID;
       }
-      this.loadingPath = true;
+      this.loading_Path = true;
       // disable follow
       this.isFollowCar = false;
       this.removeObjects();
-      // drawing marker or polyline (focus camera)
+      // drawing marker or polyline + focus camera
       if (action.motion === "P") {
         const position = { lat: +action.latStart, lng: +action.lonStart };
         this.map
@@ -241,7 +266,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
           .then(marker => {
             this.carAction = marker;
             this.animateCamera(position);
-            this.loadingPath = false;
+            this.loading_Path = false;
           });
       } else if (action.motion === "") {
         this.trackerService
@@ -263,7 +288,7 @@ export class TrackingPage implements OnInit, AfterViewInit {
               .then(polyline => {
                 this.carAction = polyline;
                 this.animateCamera(routeCoords);
-                this.loadingPath = false;
+                this.loading_Path = false;
               });
           });
       }

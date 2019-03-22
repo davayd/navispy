@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 
-import { Observable, from, of } from "rxjs";
+import { Observable, from, throwError } from "rxjs";
 
 import { CarInfo, Car, CarTrack, CarMotionHistory } from "./../models/car";
 import { HTTP } from "@ionic-native/http/ngx";
-import { map, delay } from "rxjs/operators";
+import { map, catchError } from "rxjs/operators";
+import { ErrorsHandler } from '../errors/errors-handler/errors-handler.service';
 
 @Injectable({
   providedIn: "root"
@@ -12,7 +13,7 @@ import { map, delay } from "rxjs/operators";
 export class TrackerService {
   apiUrl = " http://www.navispy.com";
 
-  constructor(private http: HTTP) {}
+  constructor(private http: HTTP, private errorsHandler: ErrorsHandler) {}
 
   login(userName: string, password: string): Observable<Car[] | any> {
     return from(
@@ -22,7 +23,10 @@ export class TrackerService {
         {},
         {}
       )
-    ).pipe(map(res => JSON.parse(res.data)));
+    ).pipe(
+      map(res => JSON.parse(res.data)),
+      catchError(error => this.errorsHandler.handleError(error))
+    );
   }
 
   getCars(userName: string, password: string): Observable<Car[]> {
@@ -33,7 +37,10 @@ export class TrackerService {
         {},
         {}
       )
-    ).pipe(map(res => JSON.parse(res.data)));
+    ).pipe(
+      map(res => JSON.parse(res.data)),
+      catchError(error => this.errorsHandler.handleError(error))
+    );
   }
 
   getCar(id: number): Observable<CarInfo> {
@@ -43,7 +50,10 @@ export class TrackerService {
         {},
         {}
       )
-    ).pipe(map(res => JSON.parse(res.data)[0]));
+    ).pipe(
+      map(res => JSON.parse(res.data)[0]),
+      catchError(error => this.errorsHandler.handleError(error))
+    );
   }
 
   getCarMotionHistory(
@@ -62,7 +72,10 @@ export class TrackerService {
         {},
         {}
       )
-    ).pipe(map(res => JSON.parse(res.data)));
+    ).pipe(
+      map(res => JSON.parse(res.data)),
+      catchError(error => this.errorsHandler.handleError(error))
+    );
   }
 
   getCarTrack(
@@ -88,6 +101,9 @@ export class TrackerService {
         {},
         {}
       )
-    ).pipe(map(res => JSON.parse(res.data)));
+    ).pipe(
+      map(res => JSON.parse(res.data)),
+      catchError(error => this.errorsHandler.handleError(error))
+    );
   }
 }

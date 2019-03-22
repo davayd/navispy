@@ -4,6 +4,14 @@
       <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
     </ion-buttons>
     <ion-title>Слежение</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="loading_Info">
+        <ion-spinner></ion-spinner>
+      </ion-button>
+      <ion-button (click)="getCarDetails()" *ngIf="isError_Info">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -26,7 +34,7 @@
     </ion-item>
 
     <div style="overflow: scroll;">
-      <ion-segment [(ngModel)]="segmentSpecification" class="border-bottom">
+      <ion-segment [(ngModel)]="activeTab" class="border-bottom">
         <ion-segment-button value="info" class="segment">
           <ion-label text-uppercase>Инфо</ion-label>
         </ion-segment-button>
@@ -34,7 +42,7 @@
           <ion-label text-uppercase>История</ion-label>
         </ion-segment-button>
       </ion-segment>
-      <div [ngSwitch]="segmentSpecification">
+      <div [ngSwitch]="activeTab">
         <div *ngSwitchCase="'info'">
           <ion-list no-padding>
             <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
@@ -71,16 +79,21 @@
             {{ currentDate | date }}
           </div>
           <app-total-history *ngIf="carMotionTotals" [carMotionTotals]="carMotionTotals"></app-total-history>
-          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts" [loadingPath]="loadingPath"
+          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts" [loadingPath]="loading_Path"
             [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
           </app-car-action-history>
-          <div padding text-center *ngIf="carMotionParts.length === 0 && !loadingHistory">
+          <div padding text-center *ngIf="carMotionParts.length === 0 && !loadingMotionHistory && !isError_MotionHistory">
             <ion-text color="medium">
               Данных на этот день нет.
             </ion-text>
           </div>
-          <div padding text-center *ngIf="loadingHistory">
+          <div padding text-center *ngIf="loading_MotionHistory">
             <ion-spinner color="medium"></ion-spinner>
+          </div>
+          <div text-center *ngIf="isError_MotionHistory">
+            <ion-button (click)="getMotionHistory()" fill="clear" size="large">
+              <ion-icon name="refresh"></ion-icon>
+            </ion-button>
           </div>
         </div>
       </div>

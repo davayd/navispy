@@ -22,7 +22,7 @@
             </ion-col>
             <ion-col size="6" no-padding>
               <img src="assets/img/distance1.svg" width="16" height="16">
-              <span class="mileage">{{ hItem.mileage.toFixed(2) }}<span class="notation">км.</span></span>
+              <span class="mileage" *ngIf="hItem.mileage">{{ hItem.mileage.toFixed(2) }}<span class="notation">км.</span></span>
             </ion-col>
             <!-- <ion-col size="4" no-padding></ion-col> -->
           </ion-row>

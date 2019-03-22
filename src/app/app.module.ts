@@ -14,6 +14,7 @@ import { AuthGuardService } from "./core/guards/auth.guard";
 
 import localeRu from "@angular/common/locales/ru";
 import { registerLocaleData } from "@angular/common";
+import { NotificationService } from "./core/services/notification.service";
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -21,7 +22,7 @@ registerLocaleData(localeRu);
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot({ mode: "md",  navAnimation: myTransitionAnimation }),
+    IonicModule.forRoot({ mode: "md", navAnimation: myTransitionAnimation }),
     AppRoutingModule
   ],
   providers: [
@@ -30,6 +31,7 @@ registerLocaleData(localeRu);
     SplashScreen,
     AuthGuardService,
     DatePicker,
+    NotificationService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: "ru-RU" }
   ],
