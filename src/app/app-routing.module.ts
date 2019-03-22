@@ -15,7 +15,8 @@ const routes: Routes = [
   },
   {
     path: "track/:carId",
-    loadChildren: "./tracking/tracking.module#TrackingPageModule"
+    loadChildren: "./tracking/tracking.module#TrackingPageModule",
+    canActivate: [AuthGuardService]
   },
   { path: "login", loadChildren: "./login/login.module#LoginPageModule" }
 ];

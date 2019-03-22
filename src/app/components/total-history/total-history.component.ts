@@ -19,19 +19,17 @@ export class CarTotalHistoryComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    const momentjs = moment("2000-01-01 00:00:00");
-
-    this.timeDriveHours = momentjs
+    this.timeDriveHours = moment("2000-01-01 00:00:00")
       .millisecond(this.carMotionTotals.driveTime)
       .hours();
-    this.timeDriveMinutes = momentjs
+    this.timeDriveMinutes = moment("2000-01-01 00:00:00")
       .millisecond(this.carMotionTotals.driveTime)
       .minutes();
 
-    this.timeParkingHours = momentjs
+    this.timeParkingHours = moment("2000-01-01 00:00:00")
       .millisecond(this.carMotionTotals.parkingTime)
       .hours();
-    this.timeParkingMinutes = momentjs
+    this.timeParkingMinutes = moment("2000-01-01 00:00:00")
       .millisecond(this.carMotionTotals.parkingTime)
       .minutes();
   }

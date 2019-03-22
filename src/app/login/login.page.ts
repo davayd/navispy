@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { first } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { Platform, Events } from "@ionic/angular";
+import { Platform, Events, MenuController } from "@ionic/angular";
 
 @Component({
   selector: "app-login",
@@ -23,7 +23,8 @@ export class LoginPage implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private platform: Platform,
-    private events: Events
+    private events: Events,
+    private menu: MenuController
   ) {
     this.backButtonEvent();
   }
@@ -35,6 +36,9 @@ export class LoginPage implements OnInit, OnDestroy {
     });
     this.valueChanges$ = this.loginForm.valueChanges.subscribe(values => {
       this.error = null;
+    });
+    this.menu.get().then((menu: HTMLIonMenuElement) => {
+      menu.swipeGesture = false;
     });
   }
 
