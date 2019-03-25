@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { Indicator } from 'src/app/core/models/car';
 
 @Component({
   selector: "app-sensor-indicator",
@@ -6,6 +7,5 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["sensor-indicator.component.scss"]
 })
 export class CarSensorIndicatorComponent {
-  @Input() indicatorName: string;
-  @Input() indicatorValue: string;
+  @Input() indicator: Indicator;
 }

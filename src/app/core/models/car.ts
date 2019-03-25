@@ -2,62 +2,29 @@ export interface Car {
   id: number;
   name: string;
   address: string;
-  // model: string;
-  // lastUpdated: number;
-  // startTime: string;
-  // totalPath: number;
-  // currentSpeed: number;
-  // currentLocation: string;
-  // travelTime: string;
 }
 export interface CarInfo {
-  other: {
-    protocol?: string;
-    satellites?: string;
-    hdop?: string;
-    io5?: string;
-    io27?: string;
-    io207?: string;
-    io32?: string;
-    io173?: string;
-    io159?: string;
-    io29?: string;
-    io30?: string;
-    io22?: string;
-    io197?: string;
-    io89?: string;
-    io116?: [string, string];
-    io170?: string;
-    io41?: string;
-    io52?: string;
-    io211?: string;
-    io67?: string;
-    io23?: string;
-    io53?: string;
-    io54?: string;
-    io55?: string;
-    io114?: string;
-    io208?: string;
-    io92?: string;
-    io65?: string;
-    io155?: string;
-    io156?: string;
-    open?: boolean;
+  other?: {
+    [key: string]: any;
   };
-  mileage: string;
-  DUT1: string;
-  DUT2: string;
-  DUT3: string;
-  speed: string;
-  latitude: string;
-  longitude: string;
-  course: number;
-  time: string;
-  address: string;
-  fuelLevel: number;
-  fuelConsumption: string;
+  address?: string;
+  time?: string;
+  _altitude?: Indicator;
+  _course?: Indicator;
+  _latitude?: Indicator;
+  _longitude?: Indicator;
+  _speed?: Indicator;
+  _mileage?: Indicator;
+  _fuelLevel?: Indicator;
+  _fuelConsumption?: Indicator;
+  _power?: Indicator;
 }
 
+export interface Indicator {
+  displayName?: string;
+  displayUnit?: string;
+  displayValue?: number;
+}
 export interface CarMotionHistory {
   breakdown: CarMotionBreakdown[];
   mileageTotal: number;

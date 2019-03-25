@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
@@ -24,7 +24,7 @@ import * as moment from "moment";
   templateUrl: "./tracking.page.html",
   styleUrls: ["./tracking.page.scss"]
 })
-export class TrackingPage implements OnInit, AfterViewInit {
+export class TrackingPage implements OnInit {
   private unsubscribe$ = new Subject<void>();
   private timerSub: Subscription;
 
@@ -63,19 +63,12 @@ export class TrackingPage implements OnInit, AfterViewInit {
       menu.swipeGesture = false;
     });
     this.carInfo = {
-      DUT1: "",
-      DUT2: "",
-      DUT3: "",
-      latitude: "",
-      longitude: "",
-      mileage: "",
-      other: {},
-      speed: "",
-      time: "",
-      course: 0,
-      address: "",
-      fuelConsumption: "",
-      fuelLevel: 0
+      _latitude: {displayValue: 0},
+      _longitude: {displayValue: 0},
+      _course: {displayValue: 0},
+      other: {
+        open: false
+      }
     };
     this.moment = moment();
     this.currentDate = new Date();
@@ -87,8 +80,6 @@ export class TrackingPage implements OnInit, AfterViewInit {
     await this.platform.ready();
     await setTimeout(() => this.loadMap(), 500);
   }
-
-  ngAfterViewInit() {}
 
   ionViewWillEnter() {
     this.carId = +this.route.snapshot.paramMap.get("carId");
@@ -161,8 +152,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
         date => {
           this.removeObjects();
           this.animateCamera({
-            lat: +this.carInfo.latitude,
-            lng: +this.carInfo.longitude
+            lat: +this.carInfo._latitude.displayValue,
+            lng: +this.carInfo._longitude.displayValue
           });
           this.currentDate = date;
           const formatDate = moment(date).format("DD-MM-YYYY");
@@ -176,8 +167,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
     this.isFollowCar = !this.isFollowCar;
     if (this.isFollowCar && this.carInfo) {
       this.animateCamera({
-        lat: +this.carInfo.latitude,
-        lng: +this.carInfo.longitude
+        lat: +this.carInfo._latitude.displayValue,
+        lng: +this.carInfo._longitude.displayValue
       });
     }
   }
@@ -201,7 +192,10 @@ export class TrackingPage implements OnInit, AfterViewInit {
     });
 
     this.carMarker = this.map.addMarkerSync({
-      position: { lat: +this.carInfo.latitude, lng: +this.carInfo.longitude },
+      position: {
+        lat: +this.carInfo._latitude.displayValue,
+        lng: +this.carInfo._longitude.displayValue
+      },
       id: this.carId,
       icon: {
         url: "assets/img/arrow.png",
@@ -210,22 +204,22 @@ export class TrackingPage implements OnInit, AfterViewInit {
           height: 30
         }
       },
-      rotation: this.carInfo.course
+      rotation: this.carInfo._course.displayValue
     });
   }
 
   updateMap(carInfo: CarInfo) {
     if (this.map) {
       if (this.isFollowCar) {
-        this.animateCamera({ lat: +carInfo.latitude, lng: +carInfo.longitude });
+        this.animateCamera({ lat: +carInfo._latitude.displayValue, lng: +carInfo._longitude.displayValue });
       }
 
       if (this.carMarker) {
         this.carMarker.setPosition({
-          lat: +carInfo.latitude,
-          lng: +carInfo.longitude
+          lat: +carInfo._latitude.displayValue,
+          lng: +carInfo._longitude.displayValue
         });
-        this.carMarker.setRotation(carInfo.course);
+        this.carMarker.setRotation(carInfo._course.displayValue);
       }
     }
   }
@@ -237,8 +231,8 @@ export class TrackingPage implements OnInit, AfterViewInit {
         this.activeCarActionId = null;
         this.removeObjects();
         this.animateCamera({
-          lat: +this.carInfo.latitude,
-          lng: +this.carInfo.longitude
+          lat: +this.carInfo._latitude.displayValue,
+          lng: +this.carInfo._longitude.displayValue
         });
         this.isFollowCar = true;
         return;

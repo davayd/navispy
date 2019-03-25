@@ -44,32 +44,54 @@
       </ion-segment>
       <div [ngSwitch]="activeTab">
         <div *ngSwitchCase="'info'">
+          <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
+            ДРУГОЕ
+            <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.other.open"></ion-icon>
+            <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.other.open"></ion-icon>
+          </ion-button>
+          <ion-list *ngIf="carInfo.other && carInfo.other.open" no-padding style=" transition: 0.2s linear;">
+            <ion-item *ngFor="let item of (carInfo.other | keyvalue)" lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                {{ item.key }}
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ item.value }}
+              </ion-label>
+            </ion-item>
+          </ion-list>
+          <!-- <ion-list no-padding>
+            <ion-item *ngFor="let param of carInfo.params" lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                {{ param.displayName }}
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{ param.displayValue }} {{ param.displayUnit }}
+              </ion-label>
+            </ion-item>
+          </ion-list> -->
           <ion-list no-padding>
-            <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
-              ДРУГОЕ
-              <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.other.open"></ion-icon>
-              <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.other.open"></ion-icon>
-            </ion-button>
-            <ion-list *ngIf="carInfo.other && carInfo.other.open" no-padding style=" transition: 0.2s linear;">
-              <ion-item *ngFor="let item of (carInfo.other | keyvalue)" lines="none" class="border-bottom fs-14">
-                <ion-label text-wrap color="primary">
-                  {{ item.key }}
-                </ion-label>
-                <ion-label text-wrap text-right>
-                  {{ item.value }}
-                </ion-label>
-              </ion-item>
-            </ion-list>
-            <app-sensor-indicator [indicatorName]="'Пробег (текущий день)'" [indicatorValue]="carInfo.mileage"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'Уровень топлива'" [indicatorValue]="carInfo.fuelLevel"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'Расход топлива'" [indicatorValue]="carInfo.fuelConsumption"></app-sensor-indicator>
-            <!-- <app-sensor-indicator [indicatorName]="'DUT1'" [indicatorValue]="carInfo.DUT1"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'DUT2'" [indicatorValue]="carInfo.DUT2"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'DUT3'" [indicatorValue]="carInfo.DUT3"></app-sensor-indicator> -->
-            <app-sensor-indicator [indicatorName]="'Скорость'" [indicatorValue]="carInfo.speed"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'Широта'" [indicatorValue]="carInfo.latitude"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'Долгота'" [indicatorValue]="carInfo.longitude"></app-sensor-indicator>
-            <app-sensor-indicator [indicatorName]="'Время обновления'" [indicatorValue]="carInfo.time"></app-sensor-indicator>
+            <app-sensor-indicator *ngIf="carInfo._speed" [indicator]="carInfo._speed"></app-sensor-indicator>
+            <app-sensor-indicator *ngIf="carInfo._fuelLevel" [indicator]="carInfo._fuelLevel"></app-sensor-indicator>
+            <app-sensor-indicator *ngIf="carInfo._fuelConsumption" [indicator]="carInfo._fuelConsumption">
+            </app-sensor-indicator>
+            <app-sensor-indicator *ngIf="carInfo._power" [indicator]="carInfo._power"></app-sensor-indicator>
+            <app-sensor-indicator *ngIf="carInfo._altitude" [indicator]="carInfo._altitude"></app-sensor-indicator>
+            <ion-item *ngIf="carInfo.address" lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Адрес
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{carInfo.address}}
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="carInfo.time" lines="none" class="border-bottom fs-14">
+              <ion-label text-wrap color="primary">
+                Время обновления
+              </ion-label>
+              <ion-label text-wrap text-right>
+                {{carInfo.time}}
+              </ion-label>
+            </ion-item>
           </ion-list>
         </div>
 
@@ -79,10 +101,11 @@
             {{ currentDate | date }}
           </div>
           <app-total-history *ngIf="carMotionTotals" [carMotionTotals]="carMotionTotals"></app-total-history>
-          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts" [loadingPath]="loading_Path"
-            [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
+          <app-car-action-history *ngIf="carMotionParts.length > 0" [carActionHistory]="carMotionParts"
+            [loadingPath]="loading_Path" [activeCarActionId]="activeCarActionId" (onBuildRoute)="buildRoute($event)">
           </app-car-action-history>
-          <div padding text-center *ngIf="carMotionParts.length === 0 && !loadingMotionHistory && !isError_MotionHistory">
+          <div padding text-center
+            *ngIf="carMotionParts.length === 0 && !loadingMotionHistory && !isError_MotionHistory">
             <ion-text color="medium">
               Данных на этот день нет.
             </ion-text>
