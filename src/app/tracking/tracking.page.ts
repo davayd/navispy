@@ -63,9 +63,10 @@ export class TrackingPage implements OnInit {
       menu.swipeGesture = false;
     });
     this.carInfo = {
-      _latitude: {displayValue: 0},
-      _longitude: {displayValue: 0},
-      _course: {displayValue: 0},
+      params: [],
+      latitude: 0,
+      longitude: 0,
+      course: 0,
       other: {
         open: false
       }
@@ -104,7 +105,7 @@ export class TrackingPage implements OnInit {
         } else {
           res.other.open = false;
         }
-        this.carInfo = res;
+        Object.assign(this.carInfo, res);
         this.updateMap(this.carInfo);
       },
       error => {
@@ -152,8 +153,8 @@ export class TrackingPage implements OnInit {
         date => {
           this.removeObjects();
           this.animateCamera({
-            lat: +this.carInfo._latitude.displayValue,
-            lng: +this.carInfo._longitude.displayValue
+            lat: +this.carInfo.latitude,
+            lng: +this.carInfo.longitude
           });
           this.currentDate = date;
           const formatDate = moment(date).format("DD-MM-YYYY");
@@ -167,20 +168,21 @@ export class TrackingPage implements OnInit {
     this.isFollowCar = !this.isFollowCar;
     if (this.isFollowCar && this.carInfo) {
       this.animateCamera({
-        lat: +this.carInfo._latitude.displayValue,
-        lng: +this.carInfo._longitude.displayValue
+        lat: +this.carInfo.latitude,
+        lng: +this.carInfo.longitude
       });
     }
   }
 
-  toggleSection(section: string) {
-    this.carInfo[section].open = !this.carInfo[section].open;
+  toggleSection() {
+    this.carInfo.other.open = !this.carInfo.other.open;
   }
 
   ionViewWillLeave() {
     this.unsubscribe$.next();
     this.unsubscribe$.unsubscribe();
     this.timerSub.unsubscribe();
+    this.carInfo = {};
   }
 
   loadMap() {
@@ -193,8 +195,8 @@ export class TrackingPage implements OnInit {
 
     this.carMarker = this.map.addMarkerSync({
       position: {
-        lat: +this.carInfo._latitude.displayValue,
-        lng: +this.carInfo._longitude.displayValue
+        lat: +this.carInfo.latitude,
+        lng: +this.carInfo.longitude
       },
       id: this.carId,
       icon: {
@@ -204,22 +206,25 @@ export class TrackingPage implements OnInit {
           height: 30
         }
       },
-      rotation: this.carInfo._course.displayValue
+      rotation: this.carInfo.course
     });
   }
 
   updateMap(carInfo: CarInfo) {
     if (this.map) {
       if (this.isFollowCar) {
-        this.animateCamera({ lat: +carInfo._latitude.displayValue, lng: +carInfo._longitude.displayValue });
+        this.animateCamera({
+          lat: +carInfo.latitude,
+          lng: +carInfo.longitude
+        });
       }
 
       if (this.carMarker) {
         this.carMarker.setPosition({
-          lat: +carInfo._latitude.displayValue,
-          lng: +carInfo._longitude.displayValue
+          lat: +carInfo.latitude,
+          lng: +carInfo.longitude
         });
-        this.carMarker.setRotation(carInfo._course.displayValue);
+        this.carMarker.setRotation(carInfo.course);
       }
     }
   }
@@ -231,8 +236,8 @@ export class TrackingPage implements OnInit {
         this.activeCarActionId = null;
         this.removeObjects();
         this.animateCamera({
-          lat: +this.carInfo._latitude.displayValue,
-          lng: +this.carInfo._longitude.displayValue
+          lat: +this.carInfo.latitude,
+          lng: +this.carInfo.longitude
         });
         this.isFollowCar = true;
         return;

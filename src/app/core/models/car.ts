@@ -9,18 +9,14 @@ export interface CarInfo {
   };
   address?: string;
   time?: string;
-  _altitude?: Indicator;
-  _course?: Indicator;
-  _latitude?: Indicator;
-  _longitude?: Indicator;
-  _speed?: Indicator;
-  _mileage?: Indicator;
-  _fuelLevel?: Indicator;
-  _fuelConsumption?: Indicator;
-  _power?: Indicator;
+  params?: Indicator[];
+  latitude?: number;
+  longitude?: number;
+  course?: number;
 }
 
 export interface Indicator {
+  key?: string;
   displayName?: string;
   displayUnit?: string;
   displayValue?: number;

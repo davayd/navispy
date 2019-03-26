@@ -19,7 +19,7 @@
   <div style="display: flex; height: 100%; flex-direction: column;" *ngIf="carInfo">
     <div id="map_canvas">
       <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button size="small" (click)="followCar()" color="white">
+        <ion-fab-button size="small" (click)="followCar()">
           <ion-icon name="locate" [color]="isFollowCar ? 'primary' : 'medium'" size="small"></ion-icon>
         </ion-fab-button>
       </ion-fab>
@@ -44,7 +44,7 @@
       </ion-segment>
       <div [ngSwitch]="activeTab">
         <div *ngSwitchCase="'info'">
-          <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection('other')" no-margin>
+          <ion-button expand="full" color="medium" *ngIf="carInfo.other" (click)="toggleSection()" no-margin>
             ДРУГОЕ
             <ion-icon slot="end" name="arrow-dropdown" *ngIf="!carInfo.other.open"></ion-icon>
             <ion-icon slot="end" name="arrow-dropup" *ngIf="carInfo.other.open"></ion-icon>
@@ -59,39 +59,8 @@
               </ion-label>
             </ion-item>
           </ion-list>
-          <!-- <ion-list no-padding>
-            <ion-item *ngFor="let param of carInfo.params" lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                {{ param.displayName }}
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{ param.displayValue }} {{ param.displayUnit }}
-              </ion-label>
-            </ion-item>
-          </ion-list> -->
           <ion-list no-padding>
-            <app-sensor-indicator *ngIf="carInfo._speed" [indicator]="carInfo._speed"></app-sensor-indicator>
-            <app-sensor-indicator *ngIf="carInfo._fuelLevel" [indicator]="carInfo._fuelLevel"></app-sensor-indicator>
-            <app-sensor-indicator *ngIf="carInfo._fuelConsumption" [indicator]="carInfo._fuelConsumption">
-            </app-sensor-indicator>
-            <app-sensor-indicator *ngIf="carInfo._power" [indicator]="carInfo._power"></app-sensor-indicator>
-            <app-sensor-indicator *ngIf="carInfo._altitude" [indicator]="carInfo._altitude"></app-sensor-indicator>
-            <ion-item *ngIf="carInfo.address" lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Адрес
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{carInfo.address}}
-              </ion-label>
-            </ion-item>
-            <ion-item *ngIf="carInfo.time" lines="none" class="border-bottom fs-14">
-              <ion-label text-wrap color="primary">
-                Время обновления
-              </ion-label>
-              <ion-label text-wrap text-right>
-                {{carInfo.time}}
-              </ion-label>
-            </ion-item>
+            <app-sensor-indicator *ngFor="let param of carInfo.params" [indicator]="param"></app-sensor-indicator>
           </ion-list>
         </div>
 

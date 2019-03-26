@@ -4,6 +4,7 @@ import { Platform, MenuController, Events } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { Router } from "@angular/router";
+import { TrackerService } from './core/services/tracker.service';
 
 @Component({
   selector: "app-root",
@@ -31,7 +32,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private menu: MenuController,
     private router: Router,
-    private events: Events
+    private events: Events,
+    private trackerService: TrackerService
   ) {
     const isAuth = localStorage.getItem("auth");
     if (!isAuth) {
@@ -61,9 +63,7 @@ export class AppComponent {
   }
 
   logout() {
-    localStorage.setItem("auth", "false");
-    localStorage.setItem("login", null);
-    localStorage.setItem("password", null);
+    this.trackerService.logout();
     this.router.navigate(["/login"]);
   }
 }
