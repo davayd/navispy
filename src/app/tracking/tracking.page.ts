@@ -31,7 +31,6 @@ export class TrackingPage implements OnInit {
   carInfo: CarInfo;
   carId: number;
   carName: string;
-  defaultHref = "cars";
   activeTab = "info";
   map: GoogleMap;
   carMarker: Marker;

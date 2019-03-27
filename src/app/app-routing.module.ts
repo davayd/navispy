@@ -18,6 +18,11 @@ const routes: Routes = [
     loadChildren: "./tracking/tracking.module#TrackingPageModule",
     canActivate: [AuthGuardService]
   },
+  {
+    path: "report/:carId",
+    loadChildren: "./report/report.module#ReportPageModule",
+    canActivate: [AuthGuardService]
+  },
   { path: "login", loadChildren: "./login/login.module#LoginPageModule" }
 ];
 

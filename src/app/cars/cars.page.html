@@ -22,13 +22,17 @@
 <ion-content>
   <ion-searchbar [(ngModel)]="carsFilter.name" placeholder="Поиск"></ion-searchbar>
   <ion-list no-padding>
-    <ion-item *ngFor="let item of cars | filterBy: carsFilter" (click)="navigate(item)" routerDirection="forward" class="ion-activatable">
+    <ion-item *ngFor="let item of cars | filterBy: carsFilter" (click)="navigate(item)" routerDirection="forward"
+      class="ion-activatable">
       <ion-ripple-effect></ion-ripple-effect>
       <ion-icon slot="start" name="car" class="icon-car"></ion-icon>
       <ion-label>
         {{item.name}}
         <p>{{item.address}}</p>
       </ion-label>
+      <ion-button slot="end" class="btn-report" fill="clear" (click)="report(item, $event)">
+        <img src="assets/img/report.svg" width="25" height="25">
+      </ion-button>
     </ion-item>
     <ion-item *ngIf="(cars | filterBy: carsFilter).length === 0">
       Нет подходящих элементов

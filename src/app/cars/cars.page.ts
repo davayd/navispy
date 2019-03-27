@@ -76,6 +76,14 @@ export class CarsPage implements OnInit, OnDestroy {
     this.router.navigate(["/track", car.id], navigationExtras);
   }
 
+  report(car: Car, event: MouseEvent) {
+    event.stopPropagation();
+    const navigationExtras: NavigationExtras = {
+      queryParams: { name: car.name }
+    };
+    this.router.navigate(["/report", car.id], navigationExtras);
+  }
+
   private backButtonEvent() {
     this.platform.backButton.subscribe(() => {
       navigator["app"].exitApp();
