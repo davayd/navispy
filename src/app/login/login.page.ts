@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { TrackerService } from "../core/services/tracker.service";
+import { TrackerService, KEY_ISAUTH, KEY_LOGIN, KEY_PASSWORD } from "../core/services/tracker.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { first } from "rxjs/operators";
 import { Router } from "@angular/router";
@@ -64,9 +64,9 @@ export class LoginPage implements OnInit, OnDestroy {
           if (data.error) {
             this.error = "Неверные данные";
           } else {
-            localStorage.setItem("auth", "true");
-            localStorage.setItem("login", this.f.username.value);
-            localStorage.setItem("password", this.f.password.value);
+            localStorage.setItem(KEY_ISAUTH, "true");
+            localStorage.setItem(KEY_LOGIN, this.f.username.value);
+            localStorage.setItem(KEY_PASSWORD, this.f.password.value);
             this.router.navigate(["/cars"]);
             this.events.publish('user:login');
           }

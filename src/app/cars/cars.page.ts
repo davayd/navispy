@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Car } from "../core/models/car";
-import { TrackerService } from "../core/services/tracker.service";
+import { TrackerService, KEY_LOGIN, KEY_PASSWORD } from "../core/services/tracker.service";
 import { Router, NavigationExtras } from "@angular/router";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -35,8 +35,8 @@ export class CarsPage implements OnInit, OnDestroy {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = true;
     });
-    this.login = localStorage.getItem("login");
-    this.password = localStorage.getItem("password");
+    this.login = localStorage.getItem(KEY_LOGIN);
+    this.password = localStorage.getItem(KEY_PASSWORD);
 
     if (!this.login || !this.password) {
       this.router.navigate(["/login"]);
@@ -85,9 +85,11 @@ export class CarsPage implements OnInit, OnDestroy {
   }
 
   private backButtonEvent() {
-    this.platform.backButton.subscribe(() => {
-      navigator["app"].exitApp();
-    });
+    this.platform.backButton
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        navigator["app"].exitApp();
+      });
   }
 
   ngOnDestroy() {

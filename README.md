@@ -1,4 +1,4 @@
-# beltrade
+# Skymonitor
 ## Building
 - change version in <i>config.xml</i>
 - <code>cordova clean</code>

@@ -1,0 +1,45 @@
+[
+    {
+        time: '2019-01-01';
+        params: [
+            {
+                displayName: "Пробег";
+                displayUnit: "км";
+                displayValue: 1000;
+            },
+            {
+                displayName: "Пассажиропоток (вошло)";
+                displayUnit: "чел";
+                displayValue: 5;
+            },
+            {
+                displayName: "Пассажиропоток (вышло)";
+                displayUnit: "чел";
+                displayValue: 3;
+            }
+        ];
+        
+    },
+    {
+        time: '2019-01-01';
+        params: [
+            {
+                displayName: "Пробег";
+                displayUnit: "км";
+                displayValue: 1000;
+            },
+            {
+                displayName: "Пассажиропоток (вошло)";
+                displayUnit: "чел";
+                displayValue: 5;
+            },
+            {
+                displayName: "Пассажиропоток (вышло)";
+                displayUnit: "чел";
+                displayValue: 3;
+            }
+        ];
+        
+    },
+    ...
+];

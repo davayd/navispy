@@ -1,0 +1,11 @@
+  <span class="date">{{report.time | date}}</span>
+<div class="container">
+  <ion-row *ngFor="let item of report.params">
+    <ion-col size="6" class="attrKey border-right">
+      {{item.displayName}}
+    </ion-col>
+    <ion-col size="6" class="attrVal">
+      {{item.displayValue}} {{item.displayUnit}}
+    </ion-col>
+  </ion-row>
+</div>

@@ -7,11 +7,16 @@ import { HTTP } from "@ionic-native/http/ngx";
 import { map, catchError } from "rxjs/operators";
 import { ErrorsHandler } from "../errors/errors-handler/errors-handler.service";
 
+export const KEY_LOGIN = "login";
+export const KEY_PASSWORD = "password";
+export const KEY_ISAUTH = "auth";
+
 @Injectable({
   providedIn: "root"
 })
 export class TrackerService {
-  apiUrl = " http://www.navispy.com";
+  apiUrl = "http://www.navispy.com";
+  initCar: CarInfo = null;
 
   constructor(private http: HTTP, private errorsHandler: ErrorsHandler) {}
 
@@ -30,10 +35,10 @@ export class TrackerService {
   }
 
   logout() {
-    localStorage.setItem("auth", "false");
-    localStorage.setItem("login", null);
-    localStorage.setItem("password", null);
-    initCar = null;
+    localStorage.setItem(KEY_ISAUTH, "false");
+    localStorage.setItem(KEY_LOGIN, null);
+    localStorage.setItem(KEY_PASSWORD, null);
+    this.initCar = null;
   }
 
   getCars(userName: string, password: string): Observable<Car[]> {
@@ -89,28 +94,30 @@ export class TrackerService {
               break;
           }
         });
-        if (!initCar) {
-          initCar = {};
-          Object.assign(initCar, carDetails);
-          return initCar;
+        if (!this.initCar) {
+          this.initCar = {};
+          Object.assign(this.initCar, carDetails);
+          return this.initCar;
         } else {
-          initCar.address = carDetails.address;
-          initCar.course = carDetails.course;
-          initCar.latitude = carDetails.latitude;
-          initCar.longitude = carDetails.longitude;
-          initCar.time = carDetails.time;
-          initCar.other = carDetails.other;
+          this.initCar.address = carDetails.address;
+          this.initCar.course = carDetails.course;
+          this.initCar.latitude = carDetails.latitude;
+          this.initCar.longitude = carDetails.longitude;
+          this.initCar.time = carDetails.time;
+          this.initCar.other = carDetails.other;
           carDetails.params.forEach(param => {
-            const index = initCar.params.findIndex(p => p.key === param.key);
+            const index = this.initCar.params.findIndex(
+              p => p.key === param.key
+            );
             if (index >= 0) {
-              initCar.params[index].displayValue = param.displayValue;
+              this.initCar.params[index].displayValue = param.displayValue;
             } else {
-              initCar.params.push(param);
+              this.initCar.params.push(param);
             }
           });
         }
 
-        return initCar;
+        return this.initCar;
       }),
       catchError(error => this.errorsHandler.handleError(error))
     );
@@ -167,5 +174,3 @@ export class TrackerService {
     );
   }
 }
-
-let initCar: CarInfo = null;

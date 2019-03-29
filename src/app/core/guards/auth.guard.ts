@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router, CanActivate, ActivatedRouteSnapshot } from "@angular/router";
+import { KEY_ISAUTH } from "../services/tracker.service";
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
@@ -7,7 +8,7 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     // tslint:disable-next-line:triple-equals
-    const isAuth: boolean = localStorage.getItem("auth") == 'true';
+    const isAuth: boolean = localStorage.getItem(KEY_ISAUTH) == "true";
     console.log(route);
 
     if (!isAuth) {

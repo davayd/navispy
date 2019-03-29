@@ -5,6 +5,8 @@ import { FormsModule } from "@angular/forms";
 import { IonicModule } from "@ionic/angular";
 
 import { ReportPage } from "./report.page";
+import { ReportService } from "../core/services/report.service";
+import { ReportForDayComponent } from "../components/report-for-day/report-for-day.component";
 
 const routes: Routes = [
   {
@@ -20,8 +22,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [
-    ReportPage,
-  ]
+  declarations: [ReportPage, ReportForDayComponent],
+  providers: [ReportService]
 })
 export class ReportPageModule {}

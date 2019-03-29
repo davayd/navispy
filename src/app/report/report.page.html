@@ -1,44 +1,56 @@
 <ion-header>
-	<ion-toolbar color="primary">
-		<ion-buttons slot="start">
-			<ion-back-button defaultHref="cars"></ion-back-button>
-		</ion-buttons>
-		<ion-title>Отчет {{carName}}</ion-title>
-		<ion-buttons slot="end">
-			<ion-button *ngIf="loading_Report">
-				<ion-spinner></ion-spinner>
-			</ion-button>
-			<ion-button (click)="getReport()" *ngIf="isError_Report">
-				<ion-icon name="refresh"></ion-icon>
-			</ion-button>
-		</ion-buttons>
-	</ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="cars"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Отчет {{carName}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="generateReport()" *ngIf="isError_Report">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<ion-row no-padding>
-		<ion-col size="12" no-padding>
-			<ion-item>
-				<ion-label>Тип</ion-label>
-				<ion-select placeholder="Select One">
-					<ion-select-option value="f">Female</ion-select-option>
-					<ion-select-option value="m">Male</ion-select-option>
-				</ion-select>
-			</ion-item>
-		</ion-col>
-	</ion-row>
-	<ion-row no-padding>
-		<ion-col size="6">
-			<ion-item>
-				<ion-label position="stacked">С</ion-label>
-				<ion-datetime display-format="D MMM, YYYY" picker-format="DD MM YYYY" [value]="now"></ion-datetime>
-			</ion-item>
-		</ion-col>
-		<ion-col size="6">
-			<ion-item>
-				<ion-label position="stacked">По</ion-label>
-				<ion-datetime display-format="D MMM, YYYY" picker-format="DD MM YYYY" [value]="now"></ion-datetime>
-			</ion-item>
-		</ion-col>
-	</ion-row>
+  <ion-row no-padding>
+    <ion-col size="12" no-padding>
+      <ion-item>
+        <ion-label>Тип</ion-label>
+        <ion-select placeholder="Выберите тип" interface="action-sheet" *ngIf="reportTypes.length > 0"
+          [(ngModel)]="reportId" okText="Ок" cancelText="Отмена">
+          <ion-select-option *ngFor="let type of reportTypes" [value]="type.ID">{{type.Name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row no-padding class="border-bottom">
+    <ion-col size="6" class="border-right" no-padding (click)="selectDateFrom()">
+      <div class="date-pick-container">
+        <div class="label">с</div>
+        <div>
+          {{ dateFrom | date }}
+        </div>
+      </div>
+    </ion-col>
+    <ion-col size="6" no-padding (click)="selectDateTo()">
+      <div class="date-pick-container">
+        <div class="label">по</div>
+        <div>
+          {{ dateTo | date }}
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-button expand="block" color="primary" class="btn-report" (click)="generateReport()">Сформировать</ion-button>
+
+  <ion-list *ngIf="!loading_Report" no-padding>
+    <app-report-for-day *ngFor="let report of reports" [report]="report"></app-report-for-day>
+  </ion-list>
+  <ion-item *ngIf="reports.length === 0">
+    Отчетов нет
+  </ion-item>
+  <div padding text-center *ngIf="loading_Report && !isError_Report">
+    <ion-spinner color="medium"></ion-spinner>
+  </div>
 </ion-content>

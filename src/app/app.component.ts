@@ -4,7 +4,7 @@ import { Platform, MenuController, Events } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { Router } from "@angular/router";
-import { TrackerService } from './core/services/tracker.service';
+import { TrackerService, KEY_LOGIN, KEY_ISAUTH } from './core/services/tracker.service';
 
 @Component({
   selector: "app-root",
@@ -35,9 +35,9 @@ export class AppComponent {
     private events: Events,
     private trackerService: TrackerService
   ) {
-    const isAuth = localStorage.getItem("auth");
+    const isAuth = localStorage.getItem(KEY_ISAUTH);
     if (!isAuth) {
-      localStorage.setItem("auth", "false");
+      localStorage.setItem(KEY_ISAUTH, "false");
     }
     if (isAuth === "true") {
       this.router.navigate(["/cars"]);
@@ -49,9 +49,9 @@ export class AppComponent {
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = false;
     });
-    this.userName = localStorage.getItem("login");
+    this.userName = localStorage.getItem(KEY_LOGIN);
     this.events.subscribe("user:login", () => {
-      this.userName = localStorage.getItem("login");
+      this.userName = localStorage.getItem(KEY_LOGIN);
     });
   }
 

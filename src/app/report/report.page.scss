@@ -1,3 +1,33 @@
 ion-content {
   --background: #F2F2F2;
 }
+
+ion-list {
+  background-color: transparent !important;
+  padding: 8px 0;
+}
+
+.btn-report {
+  margin: 10px;
+}
+
+.date-pick-container {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  padding-left: 16px;
+
+  .label {
+    margin: 3px 0;
+    font-weight: 300;
+  }
+}
+
+ion-select {
+  max-width: 70% !important;
+  .select-text {
+    white-space: normal !important;
+  }
+}
