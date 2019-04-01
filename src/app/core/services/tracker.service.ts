@@ -86,7 +86,7 @@ export class TrackerService {
               carDetails.params.push({ ...response[key], key: key });
               break;
             case "_course":
-              carDetails.course = response[key].displayValue;
+              carDetails.course = +response[key].displayValue;
               carDetails.params.push({ ...response[key], key: key });
               break;
             default:
