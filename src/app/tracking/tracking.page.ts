@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
 import { TrackerService } from "../core/services/tracker.service";
 import {
@@ -55,8 +55,7 @@ export class TrackingPage implements OnInit {
     private trackerService: TrackerService,
     private menu: MenuController,
     private platform: Platform,
-    private datePicker: DatePicker,
-    private router: Router
+    private datePicker: DatePicker
   ) {
     // tslint:disable-next-line:no-shadowed-variable
     this.menu.get().then((menu: HTMLIonMenuElement) => {
@@ -73,7 +72,6 @@ export class TrackingPage implements OnInit {
     };
     this.moment = moment();
     this.currentDate = new Date();
-    this.backButtonEvent();
   }
 
   async ngOnInit() {
@@ -300,14 +298,6 @@ export class TrackingPage implements OnInit {
     if (this.carAction) {
       this.carAction.remove();
     }
-  }
-
-  private backButtonEvent() {
-    this.platform.backButton
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        this.router.navigate(["/cars"]);
-      });
   }
 
   private animateCamera(target: any) {

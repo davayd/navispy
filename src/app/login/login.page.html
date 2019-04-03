@@ -12,13 +12,13 @@
                 [ngClass]="{ 'is-invalid': submitted && f.username.errors }"></ion-input>
             </ion-item>
             <div *ngIf="submitted && f.username.errors" class="invalid-feedback" padding-horizontal>
-              <div *ngIf="f.username.errors.required">Укажите имя пользователя</div>
+              <ion-text color="danger" *ngIf="f.username.errors.required">Укажите имя пользователя</ion-text>
             </div>
             <ion-item class="form-group">
               <ion-input type="password" placeholder="Пароль" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"></ion-input>
             </ion-item>
             <div *ngIf="submitted && f.password.errors" class="invalid-feedback" padding-horizontal>
-              <div *ngIf="f.password.errors.required">Укажите пароль</div>
+              <ion-text color="danger" *ngIf="f.password.errors.required">Укажите пароль</ion-text>
             </div>
           </div>
           <ion-text *ngIf="error" color="danger" padding-horizontal>

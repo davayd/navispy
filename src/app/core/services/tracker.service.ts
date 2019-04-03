@@ -5,7 +5,7 @@ import { Observable, from } from "rxjs";
 import { CarInfo, Car, CarTrack, CarMotionHistory } from "./../models/car";
 import { HTTP } from "@ionic-native/http/ngx";
 import { map, catchError } from "rxjs/operators";
-import { ErrorsHandler } from "../errors/errors-handler/errors-handler.service";
+import { ErrorsHandler } from "./errors-handler.service";
 
 export const KEY_LOGIN = "login";
 export const KEY_PASSWORD = "password";

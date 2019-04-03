@@ -1,4 +1,4 @@
-import { NotificationService } from "../../services/notification.service";
+import { NotificationService } from "./notification.service";
 import { HTTPResponse } from "@ionic-native/http/ngx";
 import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';

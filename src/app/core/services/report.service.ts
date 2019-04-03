@@ -4,7 +4,7 @@ import { Observable, from } from "rxjs";
 import { Report, ReportType } from "../models/report";
 
 import { map, catchError } from "rxjs/operators";
-import { ErrorsHandler } from "../errors/errors-handler/errors-handler.service";
+import { ErrorsHandler } from "./errors-handler.service";
 import { KEY_LOGIN } from "./tracker.service";
 
 @Injectable()

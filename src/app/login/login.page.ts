@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { TrackerService, KEY_ISAUTH, KEY_LOGIN, KEY_PASSWORD } from "../core/services/tracker.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { first } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { Platform, Events, MenuController } from "@ionic/angular";
+import { Events, MenuController } from "@ionic/angular";
 
 @Component({
   selector: "app-login",
@@ -22,11 +22,9 @@ export class LoginPage implements OnInit, OnDestroy {
     private trackerService: TrackerService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private platform: Platform,
     private events: Events,
     private menu: MenuController
   ) {
-    this.backButtonEvent();
   }
 
   ngOnInit() {
@@ -54,7 +52,7 @@ export class LoginPage implements OnInit, OnDestroy {
       return;
     }
 
-    // this.loading = true;
+    this.loading = true;
     this.trackerService
       .login(this.f.username.value, this.f.password.value)
       .pipe(first())
@@ -64,6 +62,7 @@ export class LoginPage implements OnInit, OnDestroy {
           if (data.error) {
             this.error = "Неверные данные";
           } else {
+            this.loading = false;
             localStorage.setItem(KEY_ISAUTH, "true");
             localStorage.setItem(KEY_LOGIN, this.f.username.value);
             localStorage.setItem(KEY_PASSWORD, this.f.password.value);
@@ -73,14 +72,9 @@ export class LoginPage implements OnInit, OnDestroy {
         },
         error => {
           console.error(error);
+          this.loading = false;
         }
       );
-  }
-
-  private backButtonEvent() {
-    this.platform.backButton.subscribe(() => {
-      navigator["app"].exitApp();
-    });
   }
 
   ngOnDestroy() {}

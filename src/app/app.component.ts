@@ -1,10 +1,20 @@
-import { Component } from "@angular/core";
+import { Component, ViewChildren, QueryList } from "@angular/core";
 
-import { Platform, MenuController, Events } from "@ionic/angular";
+import {
+  Platform,
+  MenuController,
+  Events,
+  IonRouterOutlet
+} from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
-import { Router } from "@angular/router";
-import { TrackerService, KEY_LOGIN, KEY_ISAUTH } from './core/services/tracker.service';
+import { Router, NavigationEnd } from "@angular/router";
+import {
+  TrackerService,
+  KEY_LOGIN,
+  KEY_ISAUTH
+} from "./core/services/tracker.service";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: "app-root",
@@ -26,6 +36,8 @@ export class AppComponent {
 
   userName: string;
 
+  @ViewChildren(IonRouterOutlet) routerOutlets: QueryList<IonRouterOutlet>;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -45,6 +57,8 @@ export class AppComponent {
       this.router.navigate(["/login"]);
     }
     this.initializeApp();
+    this.backButtonEvent();
+
     // tslint:disable-next-line:no-shadowed-variable
     this.menu.get().then((menu: HTMLIonMenuElement) => {
       menu.swipeGesture = false;
@@ -65,5 +79,25 @@ export class AppComponent {
   logout() {
     this.trackerService.logout();
     this.router.navigate(["/login"]);
+  }
+
+  private backButtonEvent() {
+    this.platform.backButton.subscribe(() => {
+      this.routerOutlets.forEach((outlet: IonRouterOutlet) => {
+        if (this.router.url === "/login") {
+          navigator["app"].exitApp();
+        } else if (this.router.url === "/cars") {
+          this.menu.isOpen().then(isOpen => {
+            if (isOpen) {
+              this.menu.close();
+            } else {
+              navigator["app"].exitApp();
+            }
+          });
+        } else if (outlet && outlet.canGoBack()) {
+          outlet.pop();
+        }
+      });
+    });
   }
 }

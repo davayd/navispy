@@ -28,7 +28,6 @@ export class CarsPage implements OnInit, OnDestroy {
     private platform: Platform,
     private menu: MenuController
   ) {
-    this.backButtonEvent();
   }
 
   ionViewWillEnter() {
@@ -82,14 +81,6 @@ export class CarsPage implements OnInit, OnDestroy {
       queryParams: { name: car.name }
     };
     this.router.navigate(["/report", car.id], navigationExtras);
-  }
-
-  private backButtonEvent() {
-    this.platform.backButton
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        navigator["app"].exitApp();
-      });
   }
 
   ngOnDestroy() {
